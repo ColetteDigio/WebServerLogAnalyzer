@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WebServerLogAnalyzer {
-
     public static void main(String[] args) {
 
         List<String> logs = new ArrayList<>();
@@ -25,6 +24,7 @@ public class WebServerLogAnalyzer {
             ex.printStackTrace();
         }
 
+        //
 
     }
 }

@@ -15,6 +15,9 @@ Assumptions:
 
 ## Installation
 ``` 
+cd src/main/java
+javac WebServerLogAnalyzer.java
+java WebServerLogAnalyzer
 
 ```
 
