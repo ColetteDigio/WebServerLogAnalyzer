@@ -1,4 +1,8 @@
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
@@ -11,7 +15,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class WebServerLogAnalyzer {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException, URISyntaxException {
 
         List<String> logs = new ArrayList<>();
 
@@ -25,18 +29,20 @@ public class WebServerLogAnalyzer {
             while ((line = br.readLine()) != null) {
                 logs.add(line);
             }
+        } catch (FileNotFoundException ex) {
+            throw new FileNotFoundException("Error: File not found!");
         } catch (IOException ex) {
-            // TODO handle the error gracefully
-            ex.printStackTrace();
+            System.out.println("General I/O exception:" + ex.getMessage());
         }
 
         LogDetails logDetails = getLogDetails(logs);
+        System.out.println("\n");
         System.out.println("Unique IP addresses: " + logDetails.uniqueIpAddresses() + "\n");
         System.out.println("Top 3 Active IPs: " + logDetails.top3ActiveIps() + "\n");
         System.out.println("Top 3 Visited URLs: " + logDetails.top3VisitedURLs() + "\n");
     }
 
-    public static LogDetails getLogDetails(List<String> logs) {
+    public static LogDetails getLogDetails(List<String> logs) throws URISyntaxException {
         Map<String, Integer> ipCount = new HashMap<>();
         Map<String, Integer> urlCount = new HashMap<>();
 
@@ -44,10 +50,13 @@ public class WebServerLogAnalyzer {
             String ip = log.split(" - ")[0];
             ipCount.put(ip, ipCount.getOrDefault(ip, 0) + 1);
 
-            structurePathData(log, urlCount);
+            // cleaning up URL structure by removing http
+            String fullURL = log.substring(log.indexOf("GET ") + 4, log.indexOf(" HTTP"));
+            String path = fullURL.startsWith("http") ? extractPath(fullURL) : fullURL;
+            urlCount.put(path, urlCount.getOrDefault(path, 0) + 1);
         }
 
-//        // print out IPs to observe the number of times IP is visited
+        // print out IPs to observe the number of times IP is visited
 //        System.out.println("\n***   SUMMARIES OF IPs Count   ***");
 //        ipCount.forEach((key, value) ->  System.out.println(key + " = " + value));
 //
@@ -62,29 +71,12 @@ public class WebServerLogAnalyzer {
         return new LogDetails(ipCount.size(),top3VisitedURLs, top3ActiveIps);
     }
 
-    // clean up the URLs structure, ignore domain and looking at the url path only
-    private static void structurePathData(String log, Map<String, Integer> urlCount) {
-        String fullURL = log.substring(log.indexOf("GET ") + 4, log.indexOf(" HTTP"));
-
-        String path = "";
-
-        if (fullURL.startsWith("http")) {
-            try {
-                URI uri = new URI(fullURL);
-                path = uri.getPath();
-            } catch (URISyntaxException e) {
-                // TODO handle the error gracefully
-                e.printStackTrace();
-            }
-        } else {
-            path = fullURL;
-        }
-
-        if (urlCount.containsKey(path)) {
-            urlCount.put(path, urlCount.get(path) + 1); // increment the instance
-        } else if (!path.isEmpty()) {
-            // ignores all the spaces at the bottom of the log
-            urlCount.put(path, 1); // create an instance
+    private static String extractPath(String fullURL) throws URISyntaxException {
+        try {
+            URI uri = new URI(fullURL);
+            return uri.getPath();
+        } catch (URISyntaxException e) {
+           throw new URISyntaxException("Invalid URI format", e.getMessage());
         }
     }
 

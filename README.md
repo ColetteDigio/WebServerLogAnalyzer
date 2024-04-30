@@ -24,5 +24,6 @@ mvn test -Dtest=WebServerLogAnalyzerTest
 ```
 
 ## Assumptions and thoughts
-* Most active IP addresses - same IP address with the URL excluding domain
+* Most active IP addresses - same IP address with the URL path excluding domain
 * Think about when the data / logs getting bigger, what are the solution to this?
+* Error handling

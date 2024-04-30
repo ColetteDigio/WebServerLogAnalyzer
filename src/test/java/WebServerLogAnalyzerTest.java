@@ -3,6 +3,7 @@ import org.junit.Test;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class WebServerLogAnalyzerTest {
     }
 
     @Test
-    public void testGetLogDetails() {
+    public void testGetLogDetails() throws URISyntaxException {
 
         // Mock Logs
         List<String> logs = new ArrayList<>();
