@@ -9,16 +9,20 @@ The task is to parse a log file containing HTTP requests and to report on its co
 Chosen Tech:
 * Java
 
-Assumptions:
-* Most active IP addresses - same IP address with the URL excluding domain
-
 
 ## Installation
 ``` 
-cd src/main/java
-javac WebServerLogAnalyzer.java
-java WebServerLogAnalyzer
+mvn clean install
+mvn clean package
 
+java -jar target/WebServerLogAnalyzer-1.0-SNAPSHOT.jar
 ```
 
+## Run tests
+```
+mvn test -Dtest=WebServerLogAnalyzerTest
+```
 
+## Assumptions and thoughts
+* Most active IP addresses - same IP address with the URL excluding domain
+* Think about when the data / logs getting bigger, what are the solution to this?
