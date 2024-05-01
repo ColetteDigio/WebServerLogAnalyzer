@@ -27,6 +27,8 @@ mvn test -Dtest=WebServerLogAnalyzerTest
 
 ## Assumptions and thoughts
 * Most active URLs - made 2 assumptions here
-  1. take the whole url without extracting the path
+  1. take the whole url without extracting the domain
   2. extract the `http` and `domain` out of url
-* Think about when the data / logs getting bigger, what are the solution to this?
+* Think about :
+  1. when the data / logs getting bigger, what are the solution to this? 
+  2. when the http methods are also including POST, PUT, DELETE?
