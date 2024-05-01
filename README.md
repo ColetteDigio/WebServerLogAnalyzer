@@ -12,6 +12,8 @@ Chosen Tech:
 
 ## Installation
 ``` 
+git clone git@github.com:ColetteDigio/WebServerLogAnalyzer.git
+
 mvn clean install
 mvn clean package
 
@@ -24,6 +26,7 @@ mvn test -Dtest=WebServerLogAnalyzerTest
 ```
 
 ## Assumptions and thoughts
-* Most active IP addresses - same IP address with the URL path excluding domain
+* Most active URLs - made 2 assumptions here
+  1. take the whole url without extracting the path
+  2. extract the `http` and `domain` out of url
 * Think about when the data / logs getting bigger, what are the solution to this?
-* Error handling

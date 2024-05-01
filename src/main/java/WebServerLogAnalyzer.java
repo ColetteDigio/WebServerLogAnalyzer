@@ -1,6 +1,3 @@
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -15,13 +12,24 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class WebServerLogAnalyzer {
+
     public static void main(String[] args) throws FileNotFoundException, URISyntaxException {
+
+        String logFilePath = "src/main/resources/programming-task-example-data.log";
+        List<String> logs = getLogsFromFile(logFilePath);
+
+        LogDetails logDetails = getLogDetails(logs);
+        System.out.println("\n");
+        System.out.println("Unique IP addresses: " + logDetails.uniqueIpAddresses() + "\n");
+        System.out.println("Top 3 Active IPs: " + logDetails.top3ActiveIps() + "\n");
+        System.out.println("Top 3 Visited URLs: " + logDetails.top3VisitedURLs() + "\n");
+    }
+
+    public static List<String> getLogsFromFile(String logFilePath) throws FileNotFoundException {
 
         List<String> logs = new ArrayList<>();
 
         // Read from the log file
-        String logFilePath = "src/main/resources/programming-task-example-data.log";
-
         try {
             BufferedReader br = new BufferedReader(new FileReader(logFilePath));
 
@@ -34,12 +42,7 @@ public class WebServerLogAnalyzer {
         } catch (IOException ex) {
             System.out.println("General I/O exception:" + ex.getMessage());
         }
-
-        LogDetails logDetails = getLogDetails(logs);
-        System.out.println("\n");
-        System.out.println("Unique IP addresses: " + logDetails.uniqueIpAddresses() + "\n");
-        System.out.println("Top 3 Active IPs: " + logDetails.top3ActiveIps() + "\n");
-        System.out.println("Top 3 Visited URLs: " + logDetails.top3VisitedURLs() + "\n");
+        return logs;
     }
 
     public static LogDetails getLogDetails(List<String> logs) throws URISyntaxException {
@@ -50,19 +53,18 @@ public class WebServerLogAnalyzer {
             String ip = log.split(" - ")[0];
             ipCount.put(ip, ipCount.getOrDefault(ip, 0) + 1);
 
-            // cleaning up URL structure by removing http
-            String fullURL = log.substring(log.indexOf("GET ") + 4, log.indexOf(" HTTP"));
-            String path = fullURL.startsWith("http") ? extractPath(fullURL) : fullURL;
-            urlCount.put(path, urlCount.getOrDefault(path, 0) + 1);
+            // assumption 1. process the whole URL as a whole
+            String url = log.split("\"")[1].split(" ")[1];
+            urlCount.put(url, urlCount.getOrDefault(url, 0) + 1);
+
+//            // assumption 2. cleaning up URL structure by removing http and domain
+//            String fullURL = log.substring(log.indexOf("GET ") + 4, log.indexOf(" HTTP"));
+//            String path = fullURL.startsWith("http") ? extractPath(fullURL) : fullURL;
+//            urlCount.put(path, urlCount.getOrDefault(path, 0) + 1);
         }
 
-        // print out IPs to observe the number of times IP is visited
-//        System.out.println("\n***   SUMMARIES OF IPs Count   ***");
-//        ipCount.forEach((key, value) ->  System.out.println(key + " = " + value));
-//
-//        // print out URLs to observe the structure
-//        System.out.println("\n***   SUMMARIES OF URLs Count   ***");
-//        urlCount.forEach((key, value) ->  System.out.println(key + " = " + value));
+        // uncomment the code below to inspect breakdown count of IPs and URLs
+//        inspectTotalCountOfIPAndURL(ipCount, urlCount);
 
         // Get Top 3 after sorting out the data
         List<String> top3ActiveIps = getTop3(ipCount, 3);
@@ -71,7 +73,7 @@ public class WebServerLogAnalyzer {
         return new LogDetails(ipCount.size(),top3VisitedURLs, top3ActiveIps);
     }
 
-    private static String extractPath(String fullURL) throws URISyntaxException {
+    public static String extractPath(String fullURL) throws URISyntaxException {
         try {
             URI uri = new URI(fullURL);
             return uri.getPath();
@@ -87,5 +89,16 @@ public class WebServerLogAnalyzer {
                 .limit(n)
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
+    }
+
+    // to print out and inspect total count of IPs and URLs
+    private static void inspectTotalCountOfIPAndURL(Map<String, Integer> ipCount, Map<String, Integer> urlCount) {
+        // print out IPs to observe the number of times IP is visited
+        System.out.println("\n***   SUMMARIES OF IPs Count   ***");
+        ipCount.forEach((key, value) ->  System.out.println(key + " = " + value));
+
+        // print out URLs to observe the structure
+        System.out.println("\n***   SUMMARIES OF URLs Count   ***");
+        urlCount.forEach((key, value) ->  System.out.println(key + " = " + value));
     }
 }
