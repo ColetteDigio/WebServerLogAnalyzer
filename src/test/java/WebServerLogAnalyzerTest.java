@@ -13,6 +13,13 @@ import static org.junit.Assert.assertThrows;
 
 public class WebServerLogAnalyzerTest {
 
+    private static final String MOST_ACTIVE_IP = "72.44.32.11";
+    private static final String SECOND_ACTIVE_IP = "72.44.32.10";
+    private static final String THIRD_ACTIVE_IP = "168.41.191.9";
+    private static final String MOST_ACTIVE_URL = "/to-an-error";
+    private static final String SECOND_ACTIVE_URL = "/how-to";
+    private static final String THIRD_ACTIVE_URL = "/docs/";
+
     @Test
     public void testGetLogDetails() throws URISyntaxException {
 
@@ -35,10 +42,10 @@ public class WebServerLogAnalyzerTest {
         assertEquals(4, logDetails.uniqueIpAddresses());
 
        // assert top 3 most active IPs
-        assertEquals(List.of("72.44.32.11", "72.44.32.10", "168.41.191.9"), WebServerLogAnalyzer.getLogDetails(logs).top3ActiveIps());
+        assertEquals(List.of(MOST_ACTIVE_IP, SECOND_ACTIVE_IP, THIRD_ACTIVE_IP), WebServerLogAnalyzer.getLogDetails(logs).top3ActiveIps());
 
         // assert top 3 most active Urls
-        assertEquals(List.of("/to-an-error", "/how-to", "/docs/"), WebServerLogAnalyzer.getLogDetails(logs).top3VisitedURLs());
+        assertEquals(List.of(MOST_ACTIVE_URL, SECOND_ACTIVE_URL, THIRD_ACTIVE_URL), WebServerLogAnalyzer.getLogDetails(logs).top3VisitedURLs());
     }
 
     @Test
