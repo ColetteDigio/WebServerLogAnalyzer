@@ -57,13 +57,13 @@ public class WebServerLogAnalyzer {
             String url = log.split("\"")[1].split(" ")[1];
             urlCount.put(url, urlCount.getOrDefault(url, 0) + 1);
 
-//            // assumption 2. cleaning up URL structure by removing http and domain
+            // assumption 2. cleaning up URL structure by removing http and domain
 //            String fullURL = log.substring(log.indexOf("GET ") + 4, log.indexOf(" HTTP"));
 //            String path = fullURL.startsWith("http") ? extractPath(fullURL) : fullURL;
 //            urlCount.put(path, urlCount.getOrDefault(path, 0) + 1);
         }
 
-        // uncomment the code below to inspect breakdown count of IPs and URLs
+        // uncomment the code below and the method called inspectTotalCountOfIPAndURL to inspect breakdown count of IPs and URLs
 //        inspectTotalCountOfIPAndURL(ipCount, urlCount);
 
         // Get Top 3 after sorting out the data
@@ -73,16 +73,7 @@ public class WebServerLogAnalyzer {
         return new LogDetails(ipCount.size(),top3VisitedURLs, top3ActiveIps);
     }
 
-    public static String extractPath(String fullURL) throws URISyntaxException {
-        try {
-            URI uri = new URI(fullURL);
-            return uri.getPath();
-        } catch (URISyntaxException e) {
-           throw new URISyntaxException("Invalid URI format", e.getMessage());
-        }
-    }
-
-    // a method that will look at each pair of <Ips and number> && <Urls and number> and sorting it out in order
+    // a method that will look at each key value pair of <Ips and count> && <Urls and count> and sorting it out in reverse order
     private static List<String> getTop3(Map<String, Integer> map, int n) {
         return map.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
@@ -91,14 +82,25 @@ public class WebServerLogAnalyzer {
                 .collect(Collectors.toList());
     }
 
-    // to print out and inspect total count of IPs and URLs
-    private static void inspectTotalCountOfIPAndURL(Map<String, Integer> ipCount, Map<String, Integer> urlCount) {
-        // print out IPs to observe the number of times IP is visited
-        System.out.println("\n***   SUMMARIES OF IPs Count   ***");
-        ipCount.forEach((key, value) ->  System.out.println(key + " = " + value));
 
-        // print out URLs to observe the structure
-        System.out.println("\n***   SUMMARIES OF URLs Count   ***");
-        urlCount.forEach((key, value) ->  System.out.println(key + " = " + value));
+    // this method is only used if path were extracted out of full URL
+    public static String extractPath(String fullURL) throws URISyntaxException {
+        try {
+            URI uri = new URI(fullURL);
+            return uri.getPath();
+        } catch (URISyntaxException e) {
+            throw new URISyntaxException("Invalid URI format", e.getMessage());
+        }
     }
+
+    // to print out and inspect total count of IPs and URLs
+//    private static void inspectTotalCountOfIPAndURL(Map<String, Integer> ipCount, Map<String, Integer> urlCount) {
+//        // print out IPs to observe the number of times IP is visited
+//        System.out.println("\n***   SUMMARIES OF IPs Count   ***");
+//        ipCount.forEach((key, value) ->  System.out.println(key + " = " + value));
+//
+//        // print out URLs to observe the structure
+//        System.out.println("\n***   SUMMARIES OF URLs Count   ***");
+//        urlCount.forEach((key, value) ->  System.out.println(key + " = " + value));
+//    }
 }
