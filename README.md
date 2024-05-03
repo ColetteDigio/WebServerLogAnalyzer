@@ -24,7 +24,7 @@ $ java -jar target/WebServerLogAnalyzer-1.0-SNAPSHOT.jar
 ```
 
 ## Run unit tests
-```
+``` shell script
 $ mvn test -Dtest=WebServerLogAnalyzerTest
 ```
 
