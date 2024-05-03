@@ -9,20 +9,23 @@ The task is to parse a log file containing HTTP requests and to report on its co
 Chosen Tech:
 * Java
 
+## Project startup
+``` shell script
+$ git clone git@github.com:ColetteDigio/WebServerLogAnalyzer.git
 
-## Installation
-``` 
-git clone git@github.com:ColetteDigio/WebServerLogAnalyzer.git
-
-mvn clean install
-mvn clean package
-
-java -jar target/WebServerLogAnalyzer-1.0-SNAPSHOT.jar
 ```
 
-## Run tests
+## Run application
+``` shell script
+$ mvn clean install
+$ mvn clean package
+
+$ java -jar target/WebServerLogAnalyzer-1.0-SNAPSHOT.jar
 ```
-mvn test -Dtest=WebServerLogAnalyzerTest
+
+## Run unit tests
+```
+$ mvn test -Dtest=WebServerLogAnalyzerTest
 ```
 
 ## Creation of Test Data
