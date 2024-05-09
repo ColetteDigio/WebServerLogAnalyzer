@@ -56,16 +56,16 @@ public class WebServerLogAnalyzer {
             String ip = log.split(" ")[0]; // Splitting the log string by " " delimiter and extracting the IP address at index [0]
             ipCount.put(ip, ipCount.getOrDefault(ip, 0) + 1); // Incrementing count of occurrences of the IP address in a map called ipCount.
 
-            // assumption 1. process the whole URL as a whole
+//            // assumption 1. process the whole URL as a whole
             String url = log.split("\"")[1].split(" ")[1];
-            // splits the log string using double quotes (") as the delimiter and selects the second part (index 1) of the resulting array
-            // It further splits the selected part using space as the delimiter and selects the second part (index 1) of the resulting array.
+//            // splits the log string using double quotes (") as the delimiter and selects the second part (index 1) of the resulting array
+//            // It further splits the selected part using space as the delimiter and selects the second part (index 1) of the resulting array.
             urlCount.put(url, urlCount.getOrDefault(url, 0) + 1); // Incrementing count of occurrences of the URL in a map called urlCount.
 
-            // assumption 2. cleaning up URL structure by removing http and domain
+//             assumption 2. cleaning up URL structure by removing http and domain
 //            String fullURL = log.substring(log.indexOf("GET ") + 4, log.indexOf(" HTTP")); // extracts the substring between these two indices. Adding 4 to the index of "GET " skips past the "GET " string to extract the URL.
 //            String path = fullURL.startsWith("http") ? extractPath(fullURL) : fullURL; // sets the path variable, if it contains http, extract path, if not, take the whole URL
-//            urlCount.put(path, urlCount.getOrDefault(path, 0) +  // Incrementing count of occurences of the URL called urlCount
+//            urlCount.put(path, urlCount.getOrDefault(path, 0) + 1); // Incrementing count of occurences of the URL called urlCount
         }
 
         // uncomment the code below and the method called inspectTotalCountOfIPAndURL to inspect breakdown count of IPs and URLs

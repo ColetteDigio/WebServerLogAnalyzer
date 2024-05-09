@@ -12,7 +12,6 @@ Chosen Tech:
 ## Project startup
 ``` shell script
 $ git clone git@github.com:ColetteDigio/WebServerLogAnalyzer.git
-
 ```
 
 ## Run application
@@ -27,6 +26,14 @@ $ java -jar target/WebServerLogAnalyzer-1.0-SNAPSHOT.jar
 ``` shell script
 $ mvn test -Dtest=WebServerLogAnalyzerTest
 ```
+
+## Run JaCoCo report 
+``` shell script
+$ mvn clean verify
+$ mvn jacoco:report
+```
+Jacoco test coverage report can be found in `target/jacoco/index.html`
+
 
 ## Creation of Test Data
 * `test_log_file.log` was created by duplicating different logs in a specific number for testing purpose. i.e.:
@@ -54,3 +61,14 @@ copy and paste this log 3 times to get 4 entry in the log
 5. Think about how to improve the code base
 6. Improve set up process 
 7. Documentation
+
+## Feedback / More TODOs
+1. How is the jar file execute in production?
+2. HTTP method - should also take in other http methods
+3. The list that is showing (result) - how do I know the information shown is accurate?
+4. Evidence of test coverage - Jacoco report
+    - Jacoco dependency into pom file
+5. What happen when the file gets too big, think about another implementation that may take care of big log file. check JVM 
+    - How do I run and test performance on my local?
+6. Static method - treat it as it was a bigger exercise. We won't be using static method everywhere
+7. QA manager - How would someone else run the test and knows the app is running?
