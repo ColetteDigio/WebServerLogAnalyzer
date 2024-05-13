@@ -1,3 +1,5 @@
+package au.com.org.webServerAnalyzer;
+
 import java.util.List;
 
 public record LogDetails(
