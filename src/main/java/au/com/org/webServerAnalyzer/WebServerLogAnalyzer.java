@@ -1,20 +1,33 @@
 package au.com.org.webServerAnalyzer;
 
-import au.com.org.webServerAnalyzer.LogAnalyzer;
-import au.com.org.webServerAnalyzer.LogDetails;
-import au.com.org.webServerAnalyzer.LogParser;
-import au.com.org.webServerAnalyzer.LogReader;
+import au.com.org.mbean.LogAnalyzerMcBean;
+import au.com.org.mbean.LogAnalyzerMonitor;
+import org.apache.log4j.Logger;
+
+import javax.management.InstanceAlreadyExistsException;
+import javax.management.MBeanRegistrationException;
+import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.NotCompliantMBeanException;
+import javax.management.ObjectName;
+import javax.management.StandardMBean;
 
 import java.io.FileNotFoundException;
+import java.lang.management.ManagementFactory;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 
 public class WebServerLogAnalyzer {
+
+    private static final Logger logger = Logger.getLogger(WebServerLogAnalyzer.class);
+
     public static void main(String[] args) throws FileNotFoundException, URISyntaxException {
 
+        logger.info("Starting the WebServerLogAnalyzer application...");
+
         // File path
-        String logFilePath = "src/main/resources/sample-log-file.log";
+        String logFilePath = "src/test/resources/empty.log";
 
         // Read the Log
         LogReader logReader = new LogReader();
@@ -41,5 +54,28 @@ public class WebServerLogAnalyzer {
         System.out.println("\n");
         System.out.println("Top 3 Visited URLs: ");
         top3VisitedUrls.forEach(System.out::println);
+
+
+        registerMBeanForPerformanceTest(logs);
+
+
+        logger.info("WebServerLogAnalyzer application completed successfully.");
+    }
+
+    private static void registerMBeanForPerformanceTest(List<String> logs) {
+        // Create LogAnalyzer MBean
+        LogAnalyzerMcBean logAnalyzerMcBean = new LogAnalyzerMonitor(logs);
+
+        // register MBean
+        try{
+            MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+            ObjectName objName = new ObjectName("au.com.org.webServerAnalyzer:type=LogAnalyzer");
+            StandardMBean mBean = new StandardMBean(logAnalyzerMcBean, LogAnalyzerMcBean.class);
+            mbs.registerMBean(mBean, objName);
+        } catch (MalformedObjectNameException | InstanceAlreadyExistsException |
+                 MBeanRegistrationException | NotCompliantMBeanException e) {
+            logger.error("something is wrong here!");
+            System.out.println();
+        }
     }
 }

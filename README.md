@@ -32,7 +32,7 @@ $ mvn test -Dtest=WebServerLogAnalyzerTest
 $ mvn clean verify
 $ mvn jacoco:report
 ```
-Jacoco test coverage report can be found in `target/jacoco/index.html`
+Jacoco test coverage report can be read in `target/jacoco/index.html` with browser of your choice.
 
 
 ## Creation of Test Data
@@ -51,16 +51,15 @@ copy and paste this log 3 times to get 4 entry in the log
   2. extract the `http` and `domain` out of url
 * Think about :
   1. when the data / logs getting bigger, what are the solution to this? 
-  2. when the http methods are also including POST, PUT, DELETE?
+  2. when the http methods are also including POST, PUT, DELETE? (Used Regex pattern matching)
 
-## Thought process
-1. Understand the task on high level
-2. Breaking down the task
-3. Write the simplest code to get the functionalities working
-4. Unit tests to verify implementation
-5. Think about how to improve the code base
-6. Improve set up process 
-7. Documentation
+## Testing Performance
+1. Tools - JConsole, JMH, MBean
+2. How to test the current "speed", what to look out for?
+3. Identify the part of the code that slowing down the execution, and is it possible to refactor to improve its efficiency?
+4. Create a log file big enough to crash the app after knowing the metrics
+5. Retest the code and observe its efficiency? test it again with refactored codes and see how it improves
+
 
 ## Feedback / More TODOs
 1. How is the jar file execute in production? (TBC)
@@ -68,13 +67,16 @@ copy and paste this log 3 times to get 4 entry in the log
 3. The result list that is showing - how do I know which 1 has the 1 request? (done)
 4. Evidence of test coverage - Jacoco report (done)
     - Jacoco dependency into pom file
-[//]: # (    Increase test coverage percentage to 80%- )
+    - introduce minimal test coverage %
 5. What happen when the file gets too big, think about another implementation that may take care of big log file. check JVM 
     - How do I run and test performance on my local? (TBC)
 6. Static method - treat it as it was a bigger exercise. We won't be using static method everywhere (done)
 7. QA manager - what other cases would you think of to make the app more production ready?
-   - empty file
-   - malformed log file
-   - large log file
-   - performance
-8. LOGGING!
+   - empty file (done)
+   - encoding (done)
+   - handling large log file (same as point 5)
+   - performance 
+   - LOGGING! (done)
+
+
+

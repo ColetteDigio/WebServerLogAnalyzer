@@ -1,7 +1,9 @@
 package au.com.org.webServerAnalyzer;
 
+import au.com.org.webServerAnalyzer.LogAnalyzer;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +11,20 @@ import static org.junit.Assert.assertEquals;
 
 public class LogAnalyzerTest {
     LogAnalyzer logAnalyzer = new LogAnalyzer();
+
+    @Test
+    public void testGetUniqueCount() {
+        List<String> logs = new ArrayList<>();
+        logs.add("50.112.00.28 - - [11/Jul/2018:15:49:46 +0200] \"GET /faq HTTP/1.1\"");
+        logs.add("50.112.00.28 - - [11/Jul/2018:15:49:46 +0200] \"GET /faq HTTP/1.1\"");
+        logs.add("112.00.11 - admin [11/Jul/2018:17:31:56 +0200] \"GET /asset.js HTTP/1.1\"");
+        logs.add("72.44.32.11 - - [11/Jul/2018:17:42:07 +0200] \"GET /to-an-error HTTP/1.1\"");
+        logs.add("72.44.32.11 - - [11/Jul/2018:17:42:07 +0200] \"GET /to-an-error HTTP/1.1\"");
+
+        int uniqueCount = logAnalyzer.getUniqueCount(logs);
+
+        assertEquals(3, uniqueCount);
+    }
     @Test
     public void testGetTop3() {
 

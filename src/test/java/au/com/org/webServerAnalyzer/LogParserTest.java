@@ -1,5 +1,6 @@
 package au.com.org.webServerAnalyzer;
 
+import au.com.org.webServerAnalyzer.LogParser;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
@@ -46,7 +47,7 @@ public class LogParserTest {
     }
 
     @Test
-    public void testParseUrls() throws URISyntaxException {
+    public void testParseUrls() {
 
         Map<String, Integer> urlCount = logParser.parseUrls(logs);
 
