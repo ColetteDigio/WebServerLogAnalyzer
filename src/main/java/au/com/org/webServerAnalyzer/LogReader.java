@@ -19,6 +19,7 @@ public class LogReader {
 
     public List<String> readLogsFromFile(String logFilePath, int batchSize) throws FileNotFoundException, LogFileEmptyException {
 
+
         List<String> batchLogs = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(logFilePath), StandardCharsets.UTF_8))) {

@@ -8,12 +8,27 @@
     <artifactId>WebServerLogAnalyzer</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
+    <profiles>
+        <profile>
+            <id>local</id>
+            <properties>
+                <test.env>local</test.env>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <test.env>prod</test.env>
+            </properties>
+        </profile>
+    </profiles>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
     <dependencies>
         <!-- LOGGING DEPENDENCIES -->
         <dependency>
@@ -34,13 +49,6 @@
             <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>5.11.0</version>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -65,6 +73,21 @@
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--  TEST ENVIRONMENTS PROPERTIES  -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-help-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>show-profiles</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>active-profiles</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -124,6 +147,7 @@
                         <exclude>au/com/org/webServerAnalyzer/WebServerLogAnalyzer**</exclude>
                         <exclude>au/com/org/mbean/LogAnalyzerMcBean**</exclude>
                         <exclude>au/com/org/mbean/LogAnalyzerMonitor**</exclude>
+                        <exclude>au/com/org/mbean/MBeanRegistration**</exclude>
                     </excludes>
                 </configuration>
             </plugin>
