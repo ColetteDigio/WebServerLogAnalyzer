@@ -1,16 +1,11 @@
 package au.com.org.webServerAnalyzer;
 
-import au.com.org.mbean.LogAnalyzerMcBean;
-import au.com.org.mbean.LogAnalyzerMonitor;
 import org.apache.log4j.Logger;
 
-import javax.management.*;
 import java.io.FileNotFoundException;
-import java.lang.management.ManagementFactory;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
 
 public class WebServerLogAnalyzer {
 
@@ -49,8 +44,8 @@ public class WebServerLogAnalyzer {
         System.out.println("Top 3 Visited URLs: ");
         top3VisitedUrls.forEach(System.out::println);
 
-
-        registerMBeanForPerformanceTest(logs);
+        // Commented out to separate the performance test from actual task itself
+//        registerMBeanForPerformanceTest(logs);
 
 
         logger.info("WebServerLogAnalyzer application completed successfully.");
@@ -65,23 +60,23 @@ public class WebServerLogAnalyzer {
         return logs;
     }
 
-    private static void registerMBeanForPerformanceTest(List<String> logs) {
-        // Create LogAnalyzer MBean
-        LogAnalyzerMcBean logAnalyzerMcBean = new LogAnalyzerMonitor(logs);
-
-        // register MBean
-        try{
-            MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-            ObjectName objName = new ObjectName("au.com.org.webServerAnalyzer:type=LogAnalyzer");
-            StandardMBean mBean = new StandardMBean(logAnalyzerMcBean, LogAnalyzerMcBean.class);
-            mbs.registerMBean(mBean, objName);
-
-            CountDownLatch latch = new CountDownLatch(1);
-            latch.await();
-        } catch (MalformedObjectNameException | InstanceAlreadyExistsException |
-                 MBeanRegistrationException | NotCompliantMBeanException | InterruptedException e) {
-            logger.error("Something went wrong while registering MBean for performance test!", e);
-
-        }
-    }
+//    private static void registerMBeanForPerformanceTest(List<String> logs) {
+//        // Create LogAnalyzer MBean
+//        LogAnalyzerMcBean logAnalyzerMcBean = new LogAnalyzerMonitor(logs);
+//
+//        // register MBean
+//        try{
+//            MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+//            ObjectName objName = new ObjectName("au.com.org.webServerAnalyzer:type=LogAnalyzer");
+//            StandardMBean mBean = new StandardMBean(logAnalyzerMcBean, LogAnalyzerMcBean.class);
+//            mbs.registerMBean(mBean, objName);
+//
+//            CountDownLatch latch = new CountDownLatch(1);
+//            latch.await();
+//        } catch (MalformedObjectNameException | InstanceAlreadyExistsException |
+//                 MBeanRegistrationException | NotCompliantMBeanException | InterruptedException e) {
+//            logger.error("Something went wrong while registering MBean for performance test!", e);
+//
+//        }
+//    }
 }

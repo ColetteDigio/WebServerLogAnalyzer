@@ -8,8 +8,8 @@ $ git clone git@github.com:ColetteDigio/WebServerLogAnalyzer.git
 $ mvn clean install
 $ mvn clean package
 
-$ java -jar target/WebServerLogAnalyzer-1.0-SNAPSHOT.jar
-[//]: # (TODO How is the jar file execute in production)
+$ java -jar target/WebServerLogAnalyzer-1.0-SNAPSHOT-jar-with-dependencies.jar
+
 ```
 
 ## Run unit tests
