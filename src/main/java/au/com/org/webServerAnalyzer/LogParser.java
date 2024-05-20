@@ -12,20 +12,20 @@ public class LogParser {
     private static final Logger logger = Logger.getLogger(LogParser.class);
 
     public Map<String, Integer> parseIpAddresses(List<String> logs) {
-        logger.info("Parsing IP addresses from logs...");
+//        logger.info("Parsing IP addresses from logs...");
         Map<String, Integer> ipCount = new HashMap<>();
 
         for(String log: logs) {
             String ip = log.split(" ")[0]; // Splitting the log string by " " delimiter and extracting the IP address at index [0]
             ipCount.put(ip, ipCount.getOrDefault(ip, 0) + 1); // Incrementing count of occurrences of the IP in a map called ipCount.
         }
-        logger.info("Analyzing number of IP address completed.");
+//        logger.info("Analyzing number of IP address completed.");
         return ipCount;
     }
 
 //    // assumption 1. process the whole URL as a whole
     public Map<String, Integer> parseUrls(List<String> logs) {
-        logger.info("Parsing IP addresses from logs...");
+//        logger.info("Parsing IP addresses from logs...");
 
         Map<String, Integer> urlCount = new HashMap<>();
 
@@ -33,7 +33,7 @@ public class LogParser {
             String url = log.split("\"")[1].split(" ")[1];
             urlCount.put(url, urlCount.getOrDefault(url, 0) + 1);
         }
-        logger.info("URLs parsing completed.");
+//        logger.info("URLs parsing completed.");
         return urlCount;
     }
 

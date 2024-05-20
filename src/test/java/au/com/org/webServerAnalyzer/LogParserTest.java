@@ -1,6 +1,5 @@
 package au.com.org.webServerAnalyzer;
 
-import au.com.org.webServerAnalyzer.LogParser;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
@@ -13,7 +12,7 @@ import static org.junit.Assert.assertThrows;
 
 public class LogParserTest {
 
-    LogParser logParser = new LogParser();
+    private LogParser logParser = new LogParser();
     private static final String MOST_ACTIVE_IP = "72.44.32.11";
     private static final String SECOND_ACTIVE_IP = "72.44.32.10";
     private static final String THIRD_ACTIVE_IP = "168.41.191.9";

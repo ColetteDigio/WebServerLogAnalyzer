@@ -4,34 +4,28 @@ import au.com.org.mbean.LogAnalyzerMcBean;
 import au.com.org.mbean.LogAnalyzerMonitor;
 import org.apache.log4j.Logger;
 
-import javax.management.InstanceAlreadyExistsException;
-import javax.management.MBeanRegistrationException;
-import javax.management.MBeanServer;
-import javax.management.MalformedObjectNameException;
-import javax.management.NotCompliantMBeanException;
-import javax.management.ObjectName;
-import javax.management.StandardMBean;
-
+import javax.management.*;
 import java.io.FileNotFoundException;
 import java.lang.management.ManagementFactory;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 public class WebServerLogAnalyzer {
 
     private static final Logger logger = Logger.getLogger(WebServerLogAnalyzer.class);
+
 
     public static void main(String[] args) throws FileNotFoundException, URISyntaxException {
 
         logger.info("Starting the WebServerLogAnalyzer application...");
 
         // File path
-        String logFilePath = "src/test/resources/empty.log";
+        String logFilePath = "src/main/resources/programming-task-example-data.log";
 
         // Read the Log
-        LogReader logReader = new LogReader();
-        List<String> logs = logReader.readLogsFromFile(logFilePath);
+        List<String> logs = getLogsFromFile(logFilePath);
 
         // Process log file
         LogParser logParser = new LogParser();
@@ -62,6 +56,15 @@ public class WebServerLogAnalyzer {
         logger.info("WebServerLogAnalyzer application completed successfully.");
     }
 
+    private static List<String> getLogsFromFile(String logFilePath) throws FileNotFoundException {
+
+        BatchCounter batchCounter = new BatchCounter();
+
+        LogReader logReader = new LogReader(batchCounter);
+        List<String> logs = logReader.readLogsFromFile(logFilePath, 1000);
+        return logs;
+    }
+
     private static void registerMBeanForPerformanceTest(List<String> logs) {
         // Create LogAnalyzer MBean
         LogAnalyzerMcBean logAnalyzerMcBean = new LogAnalyzerMonitor(logs);
@@ -72,10 +75,13 @@ public class WebServerLogAnalyzer {
             ObjectName objName = new ObjectName("au.com.org.webServerAnalyzer:type=LogAnalyzer");
             StandardMBean mBean = new StandardMBean(logAnalyzerMcBean, LogAnalyzerMcBean.class);
             mbs.registerMBean(mBean, objName);
+
+            CountDownLatch latch = new CountDownLatch(1);
+            latch.await();
         } catch (MalformedObjectNameException | InstanceAlreadyExistsException |
-                 MBeanRegistrationException | NotCompliantMBeanException e) {
-            logger.error("something is wrong here!");
-            System.out.println();
+                 MBeanRegistrationException | NotCompliantMBeanException | InterruptedException e) {
+            logger.error("Something went wrong while registering MBean for performance test!", e);
+
         }
     }
 }

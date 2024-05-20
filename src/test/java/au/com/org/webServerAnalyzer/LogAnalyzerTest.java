@@ -1,6 +1,5 @@
 package au.com.org.webServerAnalyzer;
 
-import au.com.org.webServerAnalyzer.LogAnalyzer;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -10,7 +9,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 
 public class LogAnalyzerTest {
-    LogAnalyzer logAnalyzer = new LogAnalyzer();
+    private LogAnalyzer logAnalyzer = new LogAnalyzer();
 
     @Test
     public void testGetUniqueCount() {
