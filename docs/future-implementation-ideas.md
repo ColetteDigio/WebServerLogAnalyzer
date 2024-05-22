@@ -1,5 +1,5 @@
 # Future plan:
-- If I were to given this exercise to start all over again:
+- If I were given this exercise a start over again:
 - start the app planning as REST API application, where the user can interact with the endpoints with tools such as Postman/ Insomnia
 - Using Spring framework to do all the magic
 
@@ -22,4 +22,3 @@
 - Other areas to be considered for performance testing:
 - Faster execution time
 - Thread distribution
-- 

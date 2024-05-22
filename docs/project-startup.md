@@ -15,7 +15,7 @@ The application and unit test can be run with the following Maven profiles enabl
 **:warning: Important! Do not store environment configuration in this repository (especially secrets)! That's what
 the environment repositories are for.**
 
-To run special configuration on application locally - please create a
+To run the application with special configuration - please create a
 file named `${special-env}-config.properties` in `/src/main/resources` and put your configuration in there. Then you can enable
 it with the `${special-env}` profile. For more complex scenarios, feel free to use tools like Docker Compose.
 
@@ -62,7 +62,7 @@ b.Start the Application:
 
 c. Identify Application PID:
 - JConsole will open a window displaying a list of running Java processes
-- Note down the Process ID (PID) of your application. For example, in the image below, the PID is 99793
+- Note down the Process ID (PID) of your application. For example, in the image below, the PID is `99793`
 ![jconsole-pop-up.png](..%2Fsrc%2Fmain%2Fresources%2Fimages%2Fjconsole-pop-up.png)
 
 d. Connect to the Process:

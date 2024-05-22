@@ -7,9 +7,9 @@
 5. Retest the code and observe its efficiency? test it again with refactored codes and see how it improves
 * Using profiling in intelliJ was first preference but community CE version do not have such feature
 
-* Set a **goal** for performance to be improved.
+* Set a *goal* for performance to be improved
 * In this application, the goal of the performance testing to avoid `running out of memory`
-* Currently, according to MBean, the maximum available memory is 17.2GB, and using 34.6Mb to run the app
+* Currently, according to MBean, the application is using 34.6Mb to run the app, the maximum available memory is 17.2GB
 - Initial scenario when reading `programming-task-example-data.log`
 ![Initial-memory-usage.png](..%2Fsrc%2Fmain%2Fresources%2Fimages%2FInitial-memory-usage.png)
 
