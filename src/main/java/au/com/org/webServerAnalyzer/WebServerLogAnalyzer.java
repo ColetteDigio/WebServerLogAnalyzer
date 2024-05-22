@@ -1,22 +1,29 @@
 package au.com.org.webServerAnalyzer;
 
+import au.com.org.config.ConfigLoader;
 import org.apache.log4j.Logger;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 public class WebServerLogAnalyzer {
 
     private static final Logger logger = Logger.getLogger(WebServerLogAnalyzer.class);
 
-    public static void main(String[] args) throws FileNotFoundException, URISyntaxException {
+    public static void main(String[] args) throws IOException, URISyntaxException {
 
         logger.info("Starting the WebServerLogAnalyzer application...");
 
+        // Load configuration properties
+        String configFile = System.getProperty("app.config", "local-config.properties");
+        Properties properties = ConfigLoader.loadProperties(configFile);
+
         // File path
-        String logFilePath = "src/main/resources/programming-task-example-data.log";
+        String logFilePath = properties.getProperty("log.file.path", "src/main/resources/programming-task-example-data.log");
 
         // Read the Log
         List<String> logs = getLogsFromFile(logFilePath);

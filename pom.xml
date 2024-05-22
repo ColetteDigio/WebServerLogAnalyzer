@@ -12,12 +12,14 @@
         <profile>
             <id>local</id>
             <properties>
+                <app.config>local-config.properties</app.config>
                 <test.env>local</test.env>
             </properties>
         </profile>
         <profile>
             <id>prod</id>
             <properties>
+                <app.config>prod-config.properties</app.config>
                 <test.env>prod</test.env>
             </properties>
         </profile>
@@ -148,6 +150,7 @@
                         <exclude>au/com/org/mbean/LogAnalyzerMcBean**</exclude>
                         <exclude>au/com/org/mbean/LogAnalyzerMonitor**</exclude>
                         <exclude>au/com/org/mbean/MBeanRegistration**</exclude>
+                        <exclude>au/com/org/config/ConfigLoader**</exclude>
                     </excludes>
                 </configuration>
             </plugin>
