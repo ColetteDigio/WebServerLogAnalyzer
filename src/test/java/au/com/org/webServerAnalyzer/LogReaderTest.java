@@ -30,7 +30,6 @@ public class LogReaderTest {
     }
 
 
-
     @Test
     public void testReadLogsFromFile_nonEmptyLogFile() throws FileNotFoundException {
 
@@ -45,15 +44,14 @@ public class LogReaderTest {
     public void testReadLogsFromFile_emptyFile()  {
         String filePath = "src/test/java/resources/empty.log";
         assertThrows(LogFileEmptyException.class, () -> {
-            logReader.readLogsFromFile(filePath, batchSize);
+            logReader.readLogsFromFile(emptyLogFilePath, batchSize);
         });
     }
 
     @Test
     public void testLogFileNotFound() {
-        String nonExistentFilePath = "i_dont_exist_file.log";
         assertThrows(FileNotFoundException.class, () -> {
-            logReader.readLogsFromFile(nonExistentFilePath, batchSize);
+            logReader.readLogsFromFile(nonExistentLogFilePath, batchSize);
         });
     }
 

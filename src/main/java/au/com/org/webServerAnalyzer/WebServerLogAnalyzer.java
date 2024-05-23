@@ -13,14 +13,34 @@ import java.util.Properties;
 public class WebServerLogAnalyzer {
 
     private static final Logger logger = Logger.getLogger(WebServerLogAnalyzer.class);
+    private final ConfigLoader configLoader;
+    private final LogReader logReader;
+    private final LogParser logParser;
+    private final LogAnalyzer logAnalyzer;
 
-    public static void main(String[] args) throws IOException, URISyntaxException {
+    public WebServerLogAnalyzer(ConfigLoader configLoader, LogReader logReader, LogParser logParser, LogAnalyzer logAnalyzer) {
+        this.configLoader = configLoader;
+        this.logReader = logReader;
+        this.logParser = logParser;
+        this.logAnalyzer = logAnalyzer;
+    }
 
-        logger.info("Starting the WebServerLogAnalyzer application...");
+    public void run() {
+        try {
+            logger.info("Starting the WebServerLogAnalyzer application...");
+            // Load configuration properties and process logs
+            loadConfigurationAndProcessLogs();
+            logger.info("WebServerLogAnalyzer application completed successfully.");
+        } catch (IOException | URISyntaxException e) {
+            logger.error("Application crashed: " + e.getMessage(), e);
+            // TODO - future implementation - implement logic to clean up and restart/ retry the application.
+        }
+    }
 
-        // Load configuration properties
+    // load configuration method, then process logs
+    void loadConfigurationAndProcessLogs() throws IOException, URISyntaxException {
         String configFile = System.getProperty("app.config", "local-config.properties");
-        Properties properties = ConfigLoader.loadProperties(configFile);
+        Properties properties = configLoader.loadProperties(configFile);
 
         // File path
         String logFilePath = properties.getProperty("log.file.path", "src/main/resources/programming-task-example-data.log");
@@ -29,35 +49,28 @@ public class WebServerLogAnalyzer {
         List<String> logs = getLogsFromFile(logFilePath);
 
         // Process log file
-        LogParser logParser = new LogParser();
+        processLogs(logs);
+    }
+
+    // Read logs
+    public List<String> getLogsFromFile(String logFilePath) throws FileNotFoundException {
+        return logReader.readLogsFromFile(logFilePath, 1000);
+    }
+
+    // process logs
+    public void processLogs(List<String> logs) throws URISyntaxException {
         Map<String, Integer> ipCount = logParser.parseIpAddresses(logs);
         Map<String, Integer> urlCount = logParser.parseUrls(logs);
 
         // Analyze the logs
-        LogAnalyzer logAnalyzer = new LogAnalyzer();
         List<String> top3ActiveIps = logAnalyzer.getTop3(ipCount, 3);
         List<String> top3VisitedUrls = logAnalyzer.getTop3(urlCount, 3);
 
         // Print the result
         printLogResults(ipCount, top3VisitedUrls, top3ActiveIps);
-
-        // Commented out to separate the performance test from actual task itself
-//        MBeanRegistration.registerMBeanForPerformanceTest(logs);
-
-
-        logger.info("WebServerLogAnalyzer application completed successfully.");
     }
 
-    private static List<String> getLogsFromFile(String logFilePath) throws FileNotFoundException {
-
-        BatchCounter batchCounter = new BatchCounter();
-
-        LogReader logReader = new LogReader(batchCounter);
-        List<String> logs = logReader.readLogsFromFile(logFilePath, 1000);
-        return logs;
-    }
-
-    private static void printLogResults(Map<String, Integer> ipCount, List<String> top3VisitedUrls, List<String> top3ActiveIps) {
+    public void printLogResults(Map<String, Integer> ipCount, List<String> top3VisitedUrls, List<String> top3ActiveIps) {
         LogDetails logDetails = new LogDetails(ipCount.size(), top3VisitedUrls, top3ActiveIps);
         System.out.println("\n");
         System.out.println("Total Unique IP addresses: " + logDetails.uniqueIpAddresses() + "\n");
@@ -69,5 +82,4 @@ public class WebServerLogAnalyzer {
         System.out.println("Top 3 Visited URLs: ");
         top3VisitedUrls.forEach(System.out::println);
     }
-
 }

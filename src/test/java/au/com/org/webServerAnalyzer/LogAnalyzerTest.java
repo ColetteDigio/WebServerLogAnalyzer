@@ -40,7 +40,7 @@ public class LogAnalyzerTest {
                         "/docs/", 2);
 
         List<String> top3ActiveIps = logAnalyzer.getTop3(ipCount, 3);
-        List<String> top3VistedUrls = logAnalyzer.getTop3(urlCount, 3);
+        List<String> top3VisitedUrls = logAnalyzer.getTop3(urlCount, 3);
 
         assertEquals(List.of(
                 "72.44.32.11 - 4 requests",
@@ -50,7 +50,7 @@ public class LogAnalyzerTest {
         assertEquals(List.of(
                 "/to-an-error - 4 requests",
                 "/how-to - 3 requests",
-                "/docs/ - 2 requests"), top3VistedUrls);
+                "/docs/ - 2 requests"), top3VisitedUrls);
     }
 }
 

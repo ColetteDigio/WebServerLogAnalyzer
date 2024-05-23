@@ -12,5 +12,3 @@
 
 ## Round 1 Feedback and Implementation
 [round-1-feedback.md](docs%2Fround-1-feedback.md)
-
-

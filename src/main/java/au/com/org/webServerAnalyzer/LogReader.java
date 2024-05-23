@@ -62,6 +62,7 @@ public class LogReader {
     }
 
     private void processBatch(List<String> batch) {
+
         batchCounter.increment(); // Increment the batch counter
     }
 
