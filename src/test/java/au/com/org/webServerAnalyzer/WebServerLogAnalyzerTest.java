@@ -64,7 +64,6 @@ public class WebServerLogAnalyzerTest {
         analyzer.getLogsFromFile("dummyPath");
     }
 
-
     @Test
     public void testProcessLogs() throws URISyntaxException, IOException {
         List<String> logs = Arrays.asList(

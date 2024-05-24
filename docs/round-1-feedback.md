@@ -26,6 +26,8 @@
    - encoding (done)
    - handling large log file (done)
    - LOGGING! (done)
+   - validate IP format (done)
+   - What if the IP OR URL of a log is empty - skip the line (done)
    - more mentioned in [future-implementation-ideas.md](future-implementation-ideas.md)
 
 

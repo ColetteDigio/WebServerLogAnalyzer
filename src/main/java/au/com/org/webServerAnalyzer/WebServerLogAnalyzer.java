@@ -18,6 +18,7 @@ public class WebServerLogAnalyzer {
     private final LogParser logParser;
     private final LogAnalyzer logAnalyzer;
 
+    // create an instance of WebServerLogAnalyzer
     public WebServerLogAnalyzer(ConfigLoader configLoader, LogReader logReader, LogParser logParser, LogAnalyzer logAnalyzer) {
         this.configLoader = configLoader;
         this.logReader = logReader;
