@@ -7,8 +7,10 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
@@ -21,6 +23,8 @@ public class LogParserTest {
     private static final String MOST_ACTIVE_URL = "/to-an-error";
     private static final String SECOND_ACTIVE_URL = "/how-to";
     private static final String THIRD_ACTIVE_URL = "/docs/";
+    private static final Pattern IP_PATTERN = Pattern.compile(
+            "^([0-9]{1,3}\\.){3}[0-9]{1,3}$");
 
     List<String> logs = List.of(
             "72.44.32.11 - - [11/Jul/2018:17:42:07 +0200] \"GET /to-an-error HTTP/1.1\" 500 3574 \"-\" \"Mozilla/5.0 (compatible; MSIE 10.6; Windows NT 6.1; Trident/5.0; InfoPath.2; SLCC1; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET CLR 2.0.50727) 3gpp-gba UNTRUSTED/1.0\"",
@@ -86,6 +90,38 @@ public class LogParserTest {
         assertEquals(2, urlCount.size());
         assertTrue(urlCount.containsKey("/asset.js"));
         assertTrue(urlCount.containsKey("/docs/"));
+    }
+
+    @Test
+    public void testValidIp() {
+        assertTrue(logParser.isValidIp("192.168.0.1"));
+        assertTrue(logParser.isValidIp("0.0.0.0"));
+        assertTrue(logParser.isValidIp("255.255.255.255"));
+    }
+
+    @Test
+    public void testInvalidIp() {
+        assertFalse(logParser.isValidIp("256.256.256.256")); // each part exceeds 255
+        assertFalse(logParser.isValidIp("192.168.0"));       // incomplete IP
+        assertFalse(logParser.isValidIp("192.168.0.1.1"));   // too many parts
+        assertFalse(logParser.isValidIp("192.168.0.-1"));    // negative part
+        assertFalse(logParser.isValidIp("abc.def.ghi.jkl")); // non-numeric
+        assertFalse(logParser.isValidIp("123.456.789.0"));   // parts exceed 255
+    }
+
+    @Test
+    public void testValidUrl() {
+        assertTrue(logParser.isValidUrl("http://example.com"));
+        assertTrue(logParser.isValidUrl("https://example.com"));
+        assertTrue(logParser.isValidUrl("ftp://example.com"));
+        assertTrue(logParser.isValidUrl("http://example.com/path?query=param#fragment"));
+    }
+
+    @Test
+    public void testInvalidUrl() {
+        assertFalse(logParser.isValidUrl("http://"));            // no domain
+        assertFalse(logParser.isValidUrl("://example.com"));     // no protocol
+        assertFalse(logParser.isValidUrl("http:// example.com"));// space in URL
     }
 
     @Test

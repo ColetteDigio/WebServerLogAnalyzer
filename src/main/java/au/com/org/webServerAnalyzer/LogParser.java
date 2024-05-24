@@ -26,11 +26,14 @@ public class LogParser {
         Map<String, Integer> ipCount = new HashMap<>();
 
         for (String log : logs) {
+            // Create a matcher to find IP addresses in the log entry using the defined pattern
             Matcher matcher = LOG_ENTRY_PATTERN.matcher(log);
             if (matcher.find()) {
+
+                // Extract the IP address from the log entry
                 String ip = matcher.group(1);
 
-                // validate IP
+                // validate the extracted IP address
                 if (isValidIp(ip)) {
                     ipCount.put(ip, ipCount.getOrDefault(ip, 0) + 1);
                 } else {
@@ -50,9 +53,15 @@ public class LogParser {
         Map<String, Integer> urlCount = new HashMap<>();
 
         for (String log : logs) {
+
+            // Create a matcher to find IP addresses in the log entry using the defined pattern
             Matcher matcher = LOG_ENTRY_PATTERN.matcher(log);
             if (matcher.find()) {
+
+                // Extract the URL from the log entry
                 String url = matcher.group(2); // extract the matched substring captured by second capturing group, which represent URLs
+
+               // Validate the URL
                 if (url != null && isValidUrl(url)) {
                     urlCount.put(url, urlCount.getOrDefault(url, 0) + 1);
                 } else {
@@ -94,22 +103,30 @@ public class LogParser {
 //    }
 
 
-    private boolean isValidIp(String ip) {
+    boolean isValidIp(String ip) {
+        // Create a matcher to match the IP address against the IP_PATTERN regex
         Matcher matcher = IP_PATTERN.matcher(ip);
+        
+        // If the IP address doesn't match the regex pattern, return false
         if (!matcher.matches()) {
             return false;
         }
+        // Split the IP address into its individual parts using the period (.) as a delimiter
         String[] parts = ip.split("\\.");
+
+        // Convert the part to an integer
         for (String part : parts) {
             int value = Integer.parseInt(part);
+
+            // Check if the integer value is outside the valid range for an IP address part (0-255)
             if (value < 0 || value > 255) {
-                return false;
+                return false; // If any part is outside this range, the IP is invalid, return false
             }
         }
-        return true;
+        return true; // return true if it's within the range
     }
 
-    private boolean isValidUrl(String url) {
+    boolean isValidUrl(String url) {
         try {
             new URI(url); // If this doesn't throw an exception, the URL is valid
             return true;
