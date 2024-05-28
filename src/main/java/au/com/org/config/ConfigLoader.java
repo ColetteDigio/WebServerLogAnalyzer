@@ -1,12 +1,14 @@
 package au.com.org.config;
 
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+@Component
 public class ConfigLoader {
     private static final Logger logger = Logger.getLogger(ConfigLoader.class);
 

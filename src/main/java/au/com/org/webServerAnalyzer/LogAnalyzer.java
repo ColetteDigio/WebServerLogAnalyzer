@@ -1,10 +1,12 @@
 package au.com.org.webServerAnalyzer;
 
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Component
 public class LogAnalyzer {
 
     private final Logger logger = Logger.getLogger(LogAnalyzer.class);

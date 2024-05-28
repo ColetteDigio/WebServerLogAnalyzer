@@ -1,6 +1,7 @@
 package au.com.org.webServerAnalyzer;
 
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -10,6 +11,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Component
 public class LogParser {
     private static final Logger logger = Logger.getLogger(LogParser.class);
 

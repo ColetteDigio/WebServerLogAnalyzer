@@ -2,12 +2,14 @@ package au.com.org.webServerAnalyzer;
 
 import au.com.org.exception.LogFileEmptyException;
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class LogReader {
 
     private final Logger logger = Logger.getLogger(LogReader.class);

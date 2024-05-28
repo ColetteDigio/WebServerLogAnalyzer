@@ -2,6 +2,7 @@ package au.com.org.webServerAnalyzer;
 
 import au.com.org.config.ConfigLoader;
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+@Component
 public class WebServerLogAnalyzer {
 
     private static final Logger logger = Logger.getLogger(WebServerLogAnalyzer.class);
