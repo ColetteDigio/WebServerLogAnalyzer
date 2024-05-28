@@ -82,7 +82,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>au.com.org.webServerAnalyzer.WebServerLogAnalyzer</mainClass>
+                            <mainClass>au.com.org.WebServerLogAnalyzerApp</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
