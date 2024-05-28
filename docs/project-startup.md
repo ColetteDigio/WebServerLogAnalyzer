@@ -9,6 +9,7 @@ The application and unit test can be run with the following Maven profiles enabl
 - *local* - tag `-Plocal`
 - *prod* - tag `-Pprod`
 - To run the application with dev config, add the `-Plocal` tag to the command line, i.e.: `mvn clean install -Plocal`
+- To showcase the properties files are in working state, running the application with `prod` profile will throw `FileNotFoundException` as the file `prod-programming-task-example-data.log` does not exist. 
 
 
 # Configuration Files
@@ -16,7 +17,7 @@ The application and unit test can be run with the following Maven profiles enabl
 the environment repositories are for.**
 
 To run the application with special configuration - please create a
-file named `${special-env}-config.properties` in `/src/main/resources` and put your configuration in there. Then you can enable
+file named `config.${special-env}-.properties` in `/src/main/resources` and put your configuration in there. Then you can enable
 it with the `${special-env}` profile. For more complex scenarios, feel free to use tools like Docker Compose.
 
 

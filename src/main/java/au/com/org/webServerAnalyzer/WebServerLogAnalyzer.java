@@ -2,7 +2,6 @@ package au.com.org.webServerAnalyzer;
 
 import au.com.org.config.ConfigLoader;
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -11,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-@Component
 public class WebServerLogAnalyzer {
 
     private static final Logger logger = Logger.getLogger(WebServerLogAnalyzer.class);
@@ -42,10 +40,10 @@ public class WebServerLogAnalyzer {
 
     // load configuration method, then process logs
     void loadConfigurationAndProcessLogs() throws IOException, URISyntaxException {
-        String configFile = System.getProperty("app.config", "local-config.properties");
-        Properties properties = configLoader.loadProperties(configFile);
+        // load config.properties
+        Properties properties = configLoader.loadPropertiesFile("config.properties");
 
-        // File path
+        // Read file path from properties file
         String logFilePath = properties.getProperty("log.file.path", "src/main/resources/programming-task-example-data.log");
 
         // Read the Log
