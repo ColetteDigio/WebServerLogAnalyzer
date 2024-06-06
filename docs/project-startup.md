@@ -26,8 +26,14 @@ it with the `${special-env}` profile. For more complex scenarios, feel free to u
 $ mvn clean install 
 $ mvn clean package
 
-$ java -jar target/WebServerLogAnalyzer-1.0-SNAPSHOT-jar-with-dependencies.jar
+$ java -Xmx8g -jar target/WebServerLogAnalyzer-1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
+
+## Run application to analyse a log file from a directory 
+``` shell script
+$ java -Xmx8g -XX:+UseG1GC -jar target/WebServerLogAnalyzer-1.0-SNAPSHOT-jar-with-dependencies.jar ${path/to-your/file} 
+```
+
 
 ## Run unit tests
 ``` shell script

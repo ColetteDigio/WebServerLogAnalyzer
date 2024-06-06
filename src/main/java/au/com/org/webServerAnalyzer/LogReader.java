@@ -3,68 +3,90 @@ package au.com.org.webServerAnalyzer;
 import au.com.org.exception.LogFileEmptyException;
 import org.apache.log4j.Logger;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LogReader {
 
-    private final Logger logger = Logger.getLogger(LogReader.class);
+    private Logger logger = Logger.getLogger(LogReader.class);
     private BatchCounter batchCounter;
 
     public LogReader(BatchCounter batchCounter) {
         this.batchCounter = batchCounter;
     }
 
-    public List<String> readLogsFromFile(String logFilePath, int batchSize) throws FileNotFoundException, LogFileEmptyException {
+    public LogReader(BatchCounter batchCounter, Logger logger) {
+            this.batchCounter = batchCounter;
+            this.logger = logger;
+    }
 
+    public List<String>readLines(String logFilePath,int batchSize) throws LogFileEmptyException, IOException {
 
+        List<String> fullLogs = new ArrayList<>();
         List<String> batchLogs = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(logFilePath), StandardCharsets.UTF_8))) {
             String line;
+            int linesRead = 0;
             while ((line = br.readLine()) != null) {
+                fullLogs.add(line);
                 batchLogs.add(line);
-                if (batchLogs.size() == batchSize) { // Checks if the batchLogs list has reached the specified batchSize
+                linesRead++;
+
+                if (batchLogs.size() == batchSize) { // Checks if the batchLogs list has reached the specified batchSize of 1000
                     processBatch(batchLogs);
-                    // If the batch size is reached, the processBatch method is called to process the current batch of logs.
-                    // This method can perform any processing logic needed, such as storing the batch in a database, at the moment, it is keeping count of the number of batch in 1000s.
-                    batchLogs.clear(); // Clear the batchLogs list after processing preparing for next batch of processing
+                    batchLogs.clear();
+                }
+
+                // provides information and keep user informed of the progress
+                if (linesRead % 1000 == 0) {
+                    logger.info("Processed " + linesRead + " lines so far...");
                 }
             }
 
-            // Verify if the log file is empty or not
-            checkLogFile(batchLogs);
+            // Process any remaining logs in the batchLogs list
+            if (!batchLogs.isEmpty()) {
+                processBatch(batchLogs);
+            }
 
-        } catch (FileNotFoundException ex) {
-            logger.error("Error: The log file is not found!");
-            throw new FileNotFoundException("Error: File not found!");
+            // Check if the log file is empty
+            if (isEmptyFile(fullLogs)) {
+                logger.info("No logs available for analysis.");
+                throw new LogFileEmptyException("No logs available for analysis.");
+            }
+
         } catch (IOException ex) {
-            logger.error("General I/O Exception ");
-            System.out.println("General I/O exception:" + ex.getMessage());
+            logger.error("General I/O Exception: " + ex.getMessage());
+            throw new IOException("General I/O Exception: " + ex.getMessage());
         }
         logger.info("Total number of batches processed: " + batchCounter.getCount());
-        return batchLogs;
+        return fullLogs;
     }
 
-    // Extract this into separate method for readability
-    private void checkLogFile(List<String> batchLogs) {
-        if (!batchLogs.isEmpty()) {
-            processBatch(batchLogs);
-        }
-
-        // Check if the log is empty
-        if (batchCounter.getCount() == 0) {
-            logger.error("Error: The log file is empty.");
-            throw new LogFileEmptyException("Error: The log file is empty");
-        }
+    private boolean isEmptyFile(List<String> logs) {
+        return logs.isEmpty();
     }
 
     private void processBatch(List<String> batch) {
 
-        batchCounter.increment(); // Increment the batch counter
-    }
+        batchCounter.increment();
 
+//        try {
+//            logParser.processBatch(batch);
+//        } catch(URISyntaxException ex) {
+//           logger.error("Error processing batch: " + ex.getMessage());
+//           throw new IOException("something wrong here"); // TODO IMPROVE LOG MESSAGE
+//        }
+    }
 }
+
+
+
+
+
 

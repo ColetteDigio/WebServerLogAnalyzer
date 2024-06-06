@@ -47,6 +47,16 @@
             <artifactId>maven-slf4j-provider</artifactId>
             <version>4.0.0-alpha-13</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.17.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.17.1</version>
+        </dependency>
 
         <!-- TESTING DEPENDENCIES -->
         <dependency>
@@ -69,6 +79,18 @@
             <version>5.12.0</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>2.17.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.17.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -89,20 +111,29 @@
             </resource>
         </resources>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>21</source>
+                    <target>21</target>
+                </configuration>
+            </plugin>
             <!-- Execute application to single JAR file -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.3.0</version>
                 <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
                     <archive>
                         <manifest>
                             <mainClass>au.com.org.WebServerLogAnalyzerApp</mainClass>
                         </manifest>
                     </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
                 </configuration>
                 <executions>
                     <execution>
@@ -143,7 +174,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <!-- Unit test coverage -->
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -194,12 +224,10 @@
                 <configuration>
                     <excludes>
                         <!-- LogDetails not included for unit testing in this project -->
-                        <exclude>au/com/org/webServerAnalyzer/LogDetails**</exclude>
                         <exclude>au/com/org/WebServerLogAnalyzerApp**</exclude>
                         <exclude>au/com/org/mbean/LogAnalyzerMcBean**</exclude>
                         <exclude>au/com/org/mbean/LogAnalyzerMonitor**</exclude>
                         <exclude>au/com/org/mbean/MBeanRegistration**</exclude>
-                        <exclude>au/com/org/config/ConfigLoader**</exclude>
                     </excludes>
                 </configuration>
             </plugin>

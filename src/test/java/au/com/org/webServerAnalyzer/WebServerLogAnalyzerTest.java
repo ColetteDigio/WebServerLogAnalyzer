@@ -3,9 +3,7 @@ package au.com.org.webServerAnalyzer;
 import au.com.org.config.ConfigLoader;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.*;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Arrays;
@@ -13,101 +11,71 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.anyInt;
-import static org.mockito.Mockito.anyMap;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class WebServerLogAnalyzerTest {
 
-    @Mock
     private ConfigLoader configLoader;
-
-    @Mock
     private LogReader logReader;
-
-    @Mock
     private LogParser logParser;
-
-    @Mock
     private LogAnalyzer logAnalyzer;
-
-    @InjectMocks
-    private WebServerLogAnalyzer analyzer;
-
-    @Captor
-    private ArgumentCaptor<List<String>> logsCaptor;
+    private WebServerLogAnalyzer webServerLogAnalyzer;
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        configLoader = mock(ConfigLoader.class);
+        logReader = mock(LogReader.class);
+        logParser = mock(LogParser.class);
+        logAnalyzer = mock(LogAnalyzer.class);
+
+        webServerLogAnalyzer = new WebServerLogAnalyzer(configLoader, logReader, logParser, logAnalyzer);
     }
 
     @Test
-    public void testGetLogsFromFile() throws IOException {
-        List<String> logs = Arrays.asList("log1", "log2", "log3");
-        when(logReader.readLogsFromFile(anyString(), anyInt())).thenReturn(logs);
-
-        List<String> resultLogs = analyzer.getLogsFromFile("dummyPath");
-        assertNotNull(resultLogs);
-        assertEquals(3, resultLogs.size());
-    }
-
-    @Test(expected = FileNotFoundException.class)
-    public void testGetLogsFromFile_FileNotFound() throws IOException {
-        when(logReader.readLogsFromFile(anyString(), anyInt())).thenThrow(new FileNotFoundException());
-
-        analyzer.getLogsFromFile("dummyPath");
-    }
-
-    @Test
-    public void testProcessLogs() throws URISyntaxException, IOException {
+    public void testReadAndProcessLogs() throws IOException, URISyntaxException {
+        // Arrange
         List<String> logs = Arrays.asList(
-                "127.0.0.1 - - [24/Feb/2021:13:00:00 +0000] \"GET /index.html HTTP/1.1\" 200 1043",
-                "192.168.0.1 - - [24/Feb/2021:13:00:01 +0000] \"POST /form HTTP/1.1\" 200 512");
+                "192.168.1.1 - - [some date] \"GET /index.html HTTP/1.1\" 200 123",
+                "192.168.1.2 - - [some date] \"GET /about.html HTTP/1.1\" 200 123"
+        );
+        when(logReader.readLines("logfile.log", 1000)).thenReturn(logs);
 
-        Map<String, Integer> ipCount = Map.of("127.0.0.1", 1, "192.168.0.1", 1);
-        Map<String, Integer> urlCount = Map.of("/index.html", 1, "/form", 1);
+        // Act
+        List<String> resultLogs = webServerLogAnalyzer.readAndProcessLogs("logfile.log");
 
-        when(logParser.parseIpAddresses(logs)).thenReturn(ipCount);
-        when(logParser.parseUrls(logs)).thenReturn(urlCount);
-        when(logAnalyzer.getTop3(ipCount, 3)).thenReturn(Arrays.asList("127.0.0.1 - 1 requests", "192.168.0.1 - 1 requests"));
-        when(logAnalyzer.getTop3(urlCount, 3)).thenReturn(Arrays.asList("/index.html - 1 requests", "/form - 1 requests"));
-
-        analyzer.processLogs(logs);
-
-        verify(logParser).parseIpAddresses(logs);
-        verify(logParser).parseUrls(logs);
-        verify(logAnalyzer).getTop3(urlCount, 3);
+        // Assert
+        assertEquals(logs, resultLogs);
+        verify(logReader, times(1)).readLines("logfile.log", 1000);
     }
 
     @Test
-    public void testPrintLogResults() throws URISyntaxException {
+    public void testAnalyseLogs() throws URISyntaxException {
+        // Arrange
         List<String> logs = Arrays.asList(
-                "127.0.0.1 - - [24/Feb/2021:13:00:00 +0000] \"GET /index.html HTTP/1.1\" 200 1043",
-                "192.168.0.1 - - [24/Feb/2021:13:00:01 +0000] \"POST /form HTTP/1.1\" 200 512"
+                "192.168.1.1 - - [some date] \"GET /index.html HTTP/1.1\" 200 123",
+                "192.168.1.2 - - [some date] \"GET /about.html HTTP/1.1\" 200 123"
         );
 
-        Map<String, Integer> ipCount = Map.of(
-                "127.0.0.1", 1,
-                "192.168.0.1", 1);
-        Map<String, Integer> urlCount = Map.of(
-                "/index.html", 1,
-                "/form", 1);
-
+        Map<String, Integer> ipCount = Map.of("192.168.1.1", 2, "192.168.1.2", 1);
+        Map<String, Integer> urlCount = Map.of("/index.html", 1, "/about.html", 1);
         when(logParser.parseIpAddresses(logs)).thenReturn(ipCount);
         when(logParser.parseUrls(logs)).thenReturn(urlCount);
-        when(logAnalyzer.getTop3(ipCount, 3)).thenReturn(Arrays.asList("127.0.0.1 - 1 requests", "192.168.0.1 - 1 requests"));
-        when(logAnalyzer.getTop3(urlCount, 3)).thenReturn(Arrays.asList("/index.html - 1 requests", "/form - 1 requests"));
 
-        analyzer.processLogs(logs);
+        List<String> top3ActiveIps = Arrays.asList("192.168.1.1 - 2 requests", "192.168.1.2 - 1 request");
+        List<String> top3VisitedUrls = Arrays.asList("/index.html - 1 request", "/about.html - 1 request");
+        when(logAnalyzer.getTop3(ipCount, 3)).thenReturn(top3ActiveIps);
+        when(logAnalyzer.getTop3(urlCount, 3)).thenReturn(top3VisitedUrls);
 
-        ArgumentCaptor<List> logsCaptor = ArgumentCaptor.forClass(List.class);
-        verify(logAnalyzer, times(2)).getTop3(anyMap(), eq(3));
-        // verifying the interactions with mocks here instead.
+        // Act
+        webServerLogAnalyzer.analyseLogs(logs);
+
+        // Assert
+        verify(logParser, times(1)).parseIpAddresses(logs);
+        verify(logParser, times(1)).parseUrls(logs);
+        verify(logAnalyzer, times(1)).getTop3(ipCount, 3);
+        verify(logAnalyzer, times(1)).getTop3(urlCount, 3);
     }
 }

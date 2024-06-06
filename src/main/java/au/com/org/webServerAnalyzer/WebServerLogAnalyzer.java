@@ -3,9 +3,10 @@ package au.com.org.webServerAnalyzer;
 import au.com.org.config.ConfigLoader;
 import org.apache.log4j.Logger;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -18,7 +19,6 @@ public class WebServerLogAnalyzer {
     private final LogParser logParser;
     private final LogAnalyzer logAnalyzer;
 
-    // create an instance of WebServerLogAnalyzer
     public WebServerLogAnalyzer(ConfigLoader configLoader, LogReader logReader, LogParser logParser, LogAnalyzer logAnalyzer) {
         this.configLoader = configLoader;
         this.logReader = logReader;
@@ -26,40 +26,40 @@ public class WebServerLogAnalyzer {
         this.logAnalyzer = logAnalyzer;
     }
 
-    public void run() {
+    public void run(String logFilePath) {
         try {
-            logger.info("Starting the WebServerLogAnalyzer application...");
+            String startTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            logger.info("Starting the WebServerLogAnalyzer application at " + startTime + "...");
+
             // Load configuration properties and process logs
-            loadConfigurationAndProcessLogs();
-            logger.info("WebServerLogAnalyzer application completed successfully.");
+            Properties properties = configLoader.loadPropertiesFile("config.properties");
+
+            // Use the log file path from the command line if provided, otherwise use the path from properties
+            if (logFilePath == null) {
+                logFilePath = properties.getProperty("log.file.path");
+            }
+
+            // Read and process logs
+            readAndProcessLogs(logFilePath);
+
+            String endTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            logger.info("WebServerLogAnalyzer application completed successfully at " + endTime);
         } catch (IOException | URISyntaxException e) {
             logger.error("Application crashed: " + e.getMessage(), e);
-            // TODO - future implementation - implement logic to clean up and restart/ retry the application.
         }
     }
 
-    // load configuration method, then process logs
-    void loadConfigurationAndProcessLogs() throws IOException, URISyntaxException {
-        // load config.properties
-        Properties properties = configLoader.loadPropertiesFile("config.properties");
-
-        // Read file path from properties file
-        String logFilePath = properties.getProperty("log.file.path", "src/main/resources/programming-task-example-data.log");
+    List<String> readAndProcessLogs(String logFilePath) throws IOException, URISyntaxException {
 
         // Read the Log
-        List<String> logs = getLogsFromFile(logFilePath);
+        List<String> logs = logReader.readLines(logFilePath, 1000);
 
         // Process log file
-        processLogs(logs);
+        analyseLogs(logs);
+        return logs;
     }
 
-    // Read logs
-    public List<String> getLogsFromFile(String logFilePath) throws FileNotFoundException {
-        return logReader.readLogsFromFile(logFilePath, 1000);
-    }
-
-    // process logs
-    public void processLogs(List<String> logs) throws URISyntaxException {
+    public void analyseLogs(List<String> logs) throws URISyntaxException {
         Map<String, Integer> ipCount = logParser.parseIpAddresses(logs);
         Map<String, Integer> urlCount = logParser.parseUrls(logs);
 
