@@ -63,16 +63,20 @@
 
 
 # Comments and realization through 100% unit test coverage
-1. 100% number is quite vague, what am I trying to achieve here? Do I want to test all the lines or branches
-2. Depending on the unit test coverage tools we are using, they sort of have a different metrics on how to measure the unit test coverage. 
-3. Setting it at 80%, apart from testing the functionality and the edge cases, it is at least a metric number that showed the client that there's a good amount of unit test coverage
+1. 100% number is quite an arbitrary number, during the refactoring of unit tests and tried to achieved 100% unit tests coverage, I am asking the following questions:
+   - Do I really need to cover all the lines or branches
+   - What are the benefit of testing the logs line and if the batchCounter increment?
+   - If the increment didn't work, the app would have lead to many other bugs
+   - Depending on the unit test coverage tools we are using, they sort of have a different metrics and measure on how to measure the unit test coverage. 
+2. The reason for setting it at 80%, apart from testing the functionality and the edge cases, it is at least a good percentage to showed the client / team that there's a good amount of unit test coverage
 
 # JVM tuning and learning
 1. A few factors involved and dependent on how the log file application processing the logs.
 2. In this application, the logReader read the log in the batch of 1000, store in the memory and analyzed the data all at once.
 3. Due to the nature of how this application is written, the whole read log file will be stored in memory, hence it requires a significant heap size higher than the log file itself.
-4. In order to reduce the heap memory size, it would be a good idea to process the file in chunks as well.
-5. To tune the required heap size for this application, being with a heap size of 7-8GB
-6. Monitor memory usage - using `JConsole`
-7. Adjust the heap size accordingly depending on how the app perform
-8. Garbage collection tuning
+4. Given an example of the log file being around 5GB, It would be a good idea to set the heap size for this application around 7-8GB
+5. Monitor memory usage - using `JConsole`
+6. Adjust the heap size accordingly depending on how the app perform
+7. Garbage collection `-XX:+UseG1GC` can also be enabled as this is designed to handle large heaps memory
+
+# Ran into permission issue while trying to run the log file from a specific directory. 

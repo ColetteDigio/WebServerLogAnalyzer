@@ -31,9 +31,9 @@ $ java -Xmx8g -jar target/WebServerLogAnalyzer-1.0-SNAPSHOT-jar-with-dependencie
 
 ## Run application to analyse a log file from a directory 
 ``` shell script
-$ java -Xmx8g -XX:+UseG1GC -jar target/WebServerLogAnalyzer-1.0-SNAPSHOT-jar-with-dependencies.jar ${path/to-your/file} 
+$ java -Xmx8g -jar target/WebServerLogAnalyzer-1.0-SNAPSHOT-jar-with-dependencies.jar ${path/to-your/file} 
 ```
-
+**Note: tuning the -Xmx8g is based on the assumption the log file size around 4-5GB
 
 ## Run unit tests
 ``` shell script

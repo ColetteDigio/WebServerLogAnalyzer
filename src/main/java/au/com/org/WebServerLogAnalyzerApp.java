@@ -1,7 +1,11 @@
 package au.com.org;
 
 import au.com.org.config.ConfigLoader;
-import au.com.org.webServerAnalyzer.*;
+import au.com.org.webServerAnalyzer.BatchCounter;
+import au.com.org.webServerAnalyzer.LogAnalyzer;
+import au.com.org.webServerAnalyzer.LogParser;
+import au.com.org.webServerAnalyzer.LogReader;
+import au.com.org.webServerAnalyzer.WebServerLogAnalyzer;
 
 public class WebServerLogAnalyzerApp {
     public static void main(String[] args) {
@@ -19,15 +23,6 @@ public class WebServerLogAnalyzerApp {
         WebServerLogAnalyzer analyzer = new WebServerLogAnalyzer(configLoader, logReader, logParser, logAnalyzer);
         analyzer.run(logFilePath);
 
-//        // Java code to monitor memory usage
-//        Runtime runtime = Runtime.getRuntime();
-//        long totalMemory = runtime.totalMemory(); // Total memory currently in use
-//        long freeMemory = runtime.freeMemory(); // Free memory available within the total memory
-//        long usedMemory = totalMemory - freeMemory; // Memory used by the Java application
-//
-//        System.out.println("Total Memory: " + totalMemory);
-//        System.out.println("Free Memory: " + freeMemory);
-//        System.out.println("Used Memory: " + usedMemory);
     }
 
 }

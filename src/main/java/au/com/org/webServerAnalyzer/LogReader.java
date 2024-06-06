@@ -75,13 +75,6 @@ public class LogReader {
     private void processBatch(List<String> batch) {
 
         batchCounter.increment();
-
-//        try {
-//            logParser.processBatch(batch);
-//        } catch(URISyntaxException ex) {
-//           logger.error("Error processing batch: " + ex.getMessage());
-//           throw new IOException("something wrong here"); // TODO IMPROVE LOG MESSAGE
-//        }
     }
 }
 
