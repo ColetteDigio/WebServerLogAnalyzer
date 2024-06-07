@@ -78,5 +78,3 @@
 5. Monitor memory usage - using `JConsole`
 6. Adjust the heap size accordingly depending on how the app perform
 7. Garbage collection `-XX:+UseG1GC` can also be enabled as this is designed to handle large heaps memory
-
-# Ran into permission issue while trying to run the log file from a specific directory. 

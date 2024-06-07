@@ -34,3 +34,16 @@
 * Result
 - Overall HEAP memory usage has improved, the application can now process a 38gb file under 30 seconds (manually timed)
 
+* Came across this https://medium.com/@AlexanderObregon/java-virtual-machine-optimization-techniques-0c7dfb0a61cd
+```dockerfile
+// Java code to monitor memory usage
+Runtime runtime = Runtime.getRuntime();
+long totalMemory = runtime.totalMemory(); // Total memory currently in use
+long freeMemory = runtime.freeMemory(); // Free memory available within the total memory
+long usedMemory = totalMemory - freeMemory; // Memory used by the Java application
+
+System.out.println("Total Memory: " + totalMemory);
+System.out.println("Free Memory: " + freeMemory);
+System.out.println("Used Memory: " + usedMemory);
+```
+- append this code into `WebServerLogAnalyzerApp`, it allows you to quickly observer the memory usage by java application, free memory available, and total memory in use
