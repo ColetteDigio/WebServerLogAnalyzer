@@ -29,11 +29,19 @@ $ mvn clean package
 $ java -Xmx8g -jar target/WebServerLogAnalyzer-1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
 
-## Run application to analyse a log file from a directory 
+## Run application to analyse a log file from a directory
+
 ``` shell script
 $ java -Xmx8g -jar target/WebServerLogAnalyzer-1.0-SNAPSHOT-jar-with-dependencies.jar ${path/to-your/file} 
 ```
-**Note: tuning the -Xmx8g is based on the assumption the log file size around 4-5GB
+OR
+``` shell script
+$ java -Xmx8g -cp target/WebServerLogAnalyzer-1.0-SNAPSHOT-jar-with-dependencies.jar au.com.org.WebServerLogAnalyzerApp ${path/to-your/file} 
+```
+**Note:
+  - tuning the -Xmx8g is based on the assumption the log file size around 4-5GB
+  - Adding the  tag `-cp`, provide where the `main` function is and `filePath` to the file to run analysis from command line
+  - modified the code to either take `filePath` as part of the command-line argument OR use the default path from config file.
 
 ## Run unit tests
 ``` shell script
