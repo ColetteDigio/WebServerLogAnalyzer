@@ -78,3 +78,23 @@
 5. Monitor memory usage - using `JConsole`
 6. Adjust the heap size accordingly depending on how the app perform
 7. Garbage collection `-XX:+UseG1GC` can also be enabled as this is designed to handle large heaps memory
+
+# JVM learning
+1. JDK - Java Development Kit
+   - this is where java code compile
+   - require to convert code to bytecodes in order to run on the machine, which the machine is called JVM
+   - once downloaded a JDK, it comes with updated JRE and JVM
+2. JRE - Java Runtime Environment
+   - JRE contains all the in-built classes and other extra files and libraries that required to run the code
+   - JRE validates the byte code and loads classes
+   - JVM is part of JRE
+3. JVM - Java Virtual Machine
+   - running the bytecodes that the computer understand and able to run the code
+   - codes compiled through JDK and run the code through JVM
+   - JDK is upper layer, mid layer JRE, inner layer JVM
+4. classpath tag `-cp` 
+   - specifying the classpath for JVM, it tells JVM to find the compiled classes or JAR files needed to run the app
+   - in another word, classpath is a parameter in JVM / Java compiler that specifies the location of user defined classes and packages
+   - to run Java app from terminal, the `-cp` allows developer to define where the Java runtime should look for the compiled bytecodes that needs to execute.
+   - so without modifying the code, the app can be run with the following command line without repackaged:
+     `java -cp path/to/your.jar au.com.org.WebServerLogAnalyzerApp /path/to/logfile.log`
