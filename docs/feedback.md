@@ -78,6 +78,13 @@
 5. Monitor memory usage - using `JConsole`
 6. Adjust the heap size accordingly depending on how the app perform
 7. Garbage collection `-XX:+UseG1GC` can also be enabled as this is designed to handle large heaps memory
+   - it helps by breaking down the HEAP into manageable regions
+   - ie: big toys room like our app
+   - divide room into zones - so only look into few zones to find toys or to clean up, instead of searching whole room
+   - quick clean up - normally set a time frame and get magic helper to clean every x interval time
+   - moving toys to make space - if one zone gets full, the helper also move some toys from full zone to empty zone. Make more space and keep things organised
+   - special zone for big toys = if there's big data, it gets special zone - the helper knows how to handle them without making a mess
+   - that's how garbage collection keeps memory room tidy and ensure program run smoothly without long pauses.
 
 # JVM learning
 1. JDK - Java Development Kit

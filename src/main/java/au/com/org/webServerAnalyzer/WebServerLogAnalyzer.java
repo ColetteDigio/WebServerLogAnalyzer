@@ -69,6 +69,10 @@ public class WebServerLogAnalyzer {
 
         // Print the result
         printLogResults(ipCount, top3VisitedUrls, top3ActiveIps);
+
+        // Commented out to separate the performance test from actual task itself
+//        MBeanRegistration.registerMBeanForPerformanceTest(logs);
+
     }
 
     public void printLogResults(Map<String, Integer> ipCount, List<String> top3VisitedUrls, List<String> top3ActiveIps) {
