@@ -18,8 +18,7 @@
 
 5. What happen when the file gets too big, think about another implementation that may take care of big log file. check JVM
     - How do I run and test performance on my local? (done)
-    - Batch processing is implemented - see [performance-testing.md](performance-testing.md) for more details
-    - Tools such as kafka and scheduler might be useful when there's a need to process large amount of data
+
 6. Static method - treat it as it was a bigger exercise. We won't be using static method everywhere (done)
 7. QA manager - what other cases would you think of to make the app more production ready?
    - empty file (done)
@@ -28,13 +27,11 @@
    - LOGGING! (done)
    - validate IP format (done)
    - What if the IP OR URL of a log is empty - skip the line (done)
-   - more mentioned in [future-implementation-ideas.md](future-implementation-ideas.md)
 
 
 ## Initial assumptions and thoughts
 * Most active URLs - made 2 assumptions here
-   1. take the whole url without extracting the domain
-   2. extract the `http` out of url
+   1. take the whole url after the HTTP methods, and before HTTP version
 * Think about :
    1. when the data / logs getting bigger, what are the solution to this?
    2. when the http methods are also including POST, PUT, DELETE? (Used Regex pattern matching)
