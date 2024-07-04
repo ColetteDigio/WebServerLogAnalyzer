@@ -41,14 +41,14 @@ public class WebServerLogAnalyzerTest {
                 "192.168.1.1 - - [some date] \"GET /index.html HTTP/1.1\" 200 123",
                 "192.168.1.2 - - [some date] \"GET /about.html HTTP/1.1\" 200 123"
         );
-        when(logReader.readLines("logfile.log", 1000)).thenReturn(logs);
+        when(logReader.readLines("logfile.log")).thenReturn(logs);
 
         // Act
         List<String> resultLogs = webServerLogAnalyzer.readAndProcessLogs("logfile.log");
 
         // Assert
         assertEquals(logs, resultLogs);
-        verify(logReader, times(1)).readLines("logfile.log", 1000);
+        verify(logReader, times(1)).readLines("logfile.log");
     }
 
     @Test

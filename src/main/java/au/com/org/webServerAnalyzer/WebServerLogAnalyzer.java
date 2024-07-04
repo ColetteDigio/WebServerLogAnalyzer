@@ -52,7 +52,7 @@ public class WebServerLogAnalyzer {
     List<String> readAndProcessLogs(String logFilePath) throws IOException, URISyntaxException {
 
         // Read the Log
-        List<String> logs = logReader.readLines(logFilePath, 1000);
+        List<String> logs = logReader.readLines(logFilePath);
 
         // Process log file
         analyseLogs(logs);
@@ -69,9 +69,6 @@ public class WebServerLogAnalyzer {
 
         // Print the result
         printLogResults(ipCount, top3VisitedUrls, top3ActiveIps);
-
-        // Commented out to separate the performance test from actual task itself
-//        MBeanRegistration.registerMBeanForPerformanceTest(logs);
 
     }
 

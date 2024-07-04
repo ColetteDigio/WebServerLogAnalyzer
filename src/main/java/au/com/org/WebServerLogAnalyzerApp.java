@@ -1,7 +1,6 @@
 package au.com.org;
 
 import au.com.org.config.ConfigLoader;
-import au.com.org.webServerAnalyzer.BatchCounter;
 import au.com.org.webServerAnalyzer.LogAnalyzer;
 import au.com.org.webServerAnalyzer.LogParser;
 import au.com.org.webServerAnalyzer.LogReader;
@@ -15,8 +14,7 @@ public class WebServerLogAnalyzerApp {
         }
 
         ConfigLoader configLoader = new ConfigLoader();
-        BatchCounter batchCounter = new BatchCounter();
-        LogReader logReader = new LogReader(batchCounter);
+        LogReader logReader = new LogReader();
         LogParser logParser = new LogParser();
         LogAnalyzer logAnalyzer = new LogAnalyzer();
 
