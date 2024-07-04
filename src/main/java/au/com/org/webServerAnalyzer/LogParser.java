@@ -10,94 +10,73 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-//TODO Currently extracting URLS and IPS and also keep count
-// TODO breakdown to just extract URLS and IPS
-// TODO Let log analyzer sort out the count
-
 public class LogParser {
     private static final Logger logger = Logger.getLogger(LogParser.class);
 
     // Regular expression to validate IPv4 addresses
     private static final Pattern IP_PATTERN = Pattern.compile(
-            "^([0-9]{1,3}\\.){3}[0-9]{1,3}$");
+            "\\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b");
 
     // Regular expression to match log lines with optional extra information
     private static final Pattern LOG_ENTRY_PATTERN = Pattern.compile(
             "^(\\S+)\\s+-\\s+\\S+\\s+\\[.*?\\]\\s+\"\\S+\\s+(\\S+)\\s+HTTP/\\S+\"\\s+\\d+\\s+\\d+.*$");
 
-    public List<String> extractIpAddresses(List<String> logs) {
+    public List<String > extractIpAddresses(List<String> lines) {
 
         List<String> ipAddresses = new ArrayList<>();
 
-        for (String log : logs) {
-            // Create a matcher to find IP addresses in the log entry using the defined pattern
-            extractIpsFromLog(log, ipAddresses);
-        }
-
-        return ipAddresses;
-    }
-
-    private void extractIpsFromLog(String log, List<String> ipAddresses) {
-        Matcher ipMatcher = LOG_ENTRY_PATTERN.matcher(log);
-        if (ipMatcher.find()) {
-
-            // Extract the IP address from the log entry
-            String ip = ipMatcher.group(1);
-
-
-            // validate the extracted IP address
-            if (isValidIp(ip)) {
-                ipAddresses.add(ip);
-            } else {
-                logger.warn("Skipping log line due to invalid IP address: " + log);
+            for (String line : lines) {
+                String ip = extractIpFromLines(line);
+                if (ip != null) {
+                    ipAddresses.add(ip);
+                }
             }
-        } else {
-            logger.warn("Skipping log line due to unmatched format: " + log);
+
+            return ipAddresses;
         }
-    }
 
-    public List<String> extractUrls(List<String> logs) throws URISyntaxException {
 
+
+    public List<String> extractUrls(List<String> lines) {
         List<String> urls = new ArrayList<>();
 
-        for (String log : logs) {
-
-            // Create a matcher to find IP addresses in the log entry using the defined pattern
-            Matcher urlMatcher = LOG_ENTRY_PATTERN.matcher(log);
-            if (urlMatcher.find()) {
-
-                // Extract the URL from the log entry
-                String url = urlMatcher.group(2); // extract the matched substring captured by second capturing group, which represent URLs
-
-               // Validate the URL
-                if (isValidUrl(url)) {
-                    urls.add(url);
-                } else {
-                    logger.warn("Skipping log line due to invalid URL: " + log);
-                }
-            } else {
-                logger.warn("Skipping log line due to unmatched format: " + log);
+        for (String line : lines) {
+            String url = extractUrlFromLines(line);
+            if (url != null) {
+                urls.add(url);
             }
         }
+
         return urls;
     }
 
-    boolean isValidIp(String ip) { // TODO check for Null?
-        // Create a matcher to match the IP address against the IP_PATTERN regex
-        Matcher matcher = IP_PATTERN.matcher(ip);
+    private String extractIpFromLines(String log) {
+        Matcher matcher = LOG_ENTRY_PATTERN.matcher(log);
+        if (!matcher.find()) {
+            logger.warn("Skipping log line due to unmatched format: " + log);
+            return null;
+        }
 
-        // If the IP address doesn't match the regex pattern, return false
+        String ip = matcher.group(1);
+        if (!isValidIp(ip)) {
+            logger.warn("Skipping log line due to invalid IP address: " + log);
+            return null;
+        }
+
+        return ip;
+    }
+
+    private boolean isValidIp(String ip) {
+        if (ip == null) return false;
+
+        Matcher matcher = IP_PATTERN.matcher(ip);
         if (!matcher.matches()) {
             return false;
         }
-        // Split the IP address into its individual parts using the period (.) as a delimiter
-        String[] parts = ip.split("\\.");
 
-        // Convert the part to an integer
+        String[] parts = ip.split("\\.");
         for (String part : parts) {
             int value = Integer.parseInt(part);
-
-            // Check if the integer value is outside the valid range for an IP address part (0-255)
             if (value < 0 || value > 255) {
                 return false;
             }
@@ -105,14 +84,29 @@ public class LogParser {
         return true;
     }
 
-    boolean isValidUrl(String url) {
+
+    private String extractUrlFromLines(String line) {
+        Matcher urlMatcher = LOG_ENTRY_PATTERN.matcher(line);
+        if (!urlMatcher.find()) {
+            logger.warn("Skipping log line due to unmatched format: " + line);
+            return null;
+        }
+
+        String url = urlMatcher.group(2);
+        if (!isValidUrl(url)) {
+            logger.warn("Skipping log line due to invalid URL: " + line);
+            return null;
+        }
+
+        return url;
+    }
+
+    private boolean isValidUrl(String url) {
+        if (url == null) return false;
         try {
             new URI(url);
             return true;
         } catch (URISyntaxException e) {
-            return false;
-        } catch (NullPointerException e) {
-            logger.info("this log line contains no URL: " + e.getMessage()); // TODO improve log message
             return false;
         }
     }

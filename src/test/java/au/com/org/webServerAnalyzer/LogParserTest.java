@@ -41,7 +41,7 @@
 //    @Test
 //    public void testParseIpAddresses() {
 //
-//        Map<String, Integer> ipCount = logParser.parseIpAddresses(logs);
+//        List<String> ipCount = logParser.extractIpAddresses(logs);
 //
 //        assertEquals(4, ipCount.size());
 //
@@ -59,7 +59,7 @@
 //                "168.41.191.9 - - [09/Jul/2018:22:56:45 +0200] \"GET /docs/ HTTP/1.1\" 200 3574 \"-\" \"Mozilla/5.0 (X11; Linux i686; rv:6.0) Gecko/20100101 Firefox/6.0\""
 //        );
 //
-//        Map<String, Integer> ipCount = logParser.parseIpAddresses(logs);
+//        List<String> ipCount = logParser.extractIpAddresses(logs);
 //
 //        assertEquals(2, ipCount.size());
 //        assertTrue(ipCount.containsKey("50.112.00.11"));
@@ -69,7 +69,7 @@
 //    @Test
 //    public void testParseUrls() throws URISyntaxException {
 //
-//        Map<String, Integer> urlCount = logParser.parseUrls(logs);
+//        List<String> urlCount = logParser.extractUrls(logs);
 //
 //        assertEquals(4, urlCount.size());
 //        assertEquals(Integer.valueOf(4), urlCount.get(MOST_ACTIVE_URL));
@@ -92,7 +92,7 @@
 //                "168.41.191.9 - - [09/Jul/2018:22:56:45 +0200] \"DELETE /docs/ HTTP/1.1\" 200 3574 \"-\" \"Mozilla/5.0 (X11; Linux i686; rv:6.0) Gecko/20100101 Firefox/6.0 456 789",
 //                "168.41.191.43 - - [11/Jul/2018:17:43:40 +0200] \"GET /moved-permanently HTTP/1.1\" 301 3574 \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_7) AppleWebKit/534.24 (KHTML, like Gecko) RockMelt/0.9.58.494 Chrome/11.0.696.71 Safari/534.24");
 //
-//        Map<String, Integer> urlCount = logParser.parseUrls(logs);
+//        List<String> urlCount = logParser.extractUrls(logs);
 //
 //        assertEquals(4, urlCount.size());
 //        assertEquals(Integer.valueOf(4), urlCount.get(MOST_ACTIVE_URL));
@@ -110,7 +110,7 @@
 //                "168.41.191.9 - - [09/Jul/2018:22:56:45 +0200] \"GET /docs/ HTTP/1.1\" 200 3574 \"-\" \"Mozilla/5.0 (X11; Linux i686; rv:6.0) Gecko/20100101 Firefox/6.0\""
 //        );
 //
-//        Map<String, Integer> urlCount = logParser.parseUrls(logs);
+//        List<String> urlCount = logParser.extractUrls(logs);
 //
 //        assertEquals(2, urlCount.size());
 //        assertTrue(urlCount.containsKey("/asset.js"));

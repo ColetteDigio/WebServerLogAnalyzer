@@ -39,20 +39,21 @@ public class WebServerLogAnalyzer {
             }
 
             // read lines from log file
-            List<String> logs = readLines(logFilePath);
+            List<String> lines = readLines(logFilePath);
 
-            // extract IPs and URLs // TODO currently it is keeping count as the extraction is happening, should this be sorted in analyzing part?
-            List<String> ipAddresses = logParser.extractIpAddresses(logs);
-            List<String> urls = logParser.extractUrls(logs);
+            // extract IPs and URLs
+            List<String> ipAddresses = logParser.extractIpAddresses(lines);
+            List<String> urls = logParser.extractUrls(lines);
 
-            // Count occurrences of IPs and URLs
+            // count occurrences of IPs and URLs
             Map<String, Integer> ipCount = logAnalyzer.countOccurrences(ipAddresses);
             Map<String, Integer> urlCount = logAnalyzer.countOccurrences(urls);
 
-            // Analyze the logs
+            // get top 3 Ips and Urls
             List<String> top3ActiveIps = logAnalyzer.getTop3(ipCount, 3);
             List<String> top3VisitedUrls = logAnalyzer.getTop3(urlCount, 3);
 
+            // print result
             LogDetails logDetails = new LogDetails(ipCount.size(), top3VisitedUrls, top3ActiveIps);
             System.out.println("\n");
             System.out.println("Total Unique IP addresses: " + logDetails.uniqueIpAddresses() + "\n");
