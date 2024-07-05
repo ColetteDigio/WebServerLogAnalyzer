@@ -50,23 +50,23 @@ public class LogParser {
         return urls;
     }
 
-    private String extractIpFromLines(String log) {
-        Matcher matcher = LOG_ENTRY_PATTERN.matcher(log);
+    String extractIpFromLines(String line) {
+        Matcher matcher = LOG_ENTRY_PATTERN.matcher(line);
         if (!matcher.find()) {
-            logger.warn("Skipping log line due to unmatched format: " + log);
+            logger.warn("Skipping log line due to unmatched format: " + line);
             return null;
         }
 
         String ip = matcher.group(1);
         if (!isValidIp(ip)) {
-            logger.warn("Skipping log line due to invalid IP address: " + log);
+            logger.warn("Skipping log line due to invalid IP address: " + line);
             return null;
         }
 
         return ip;
     }
 
-    private boolean isValidIp(String ip) {
+    boolean isValidIp(String ip) {
         if (ip == null) return false;
 
         Matcher matcher = IP_PATTERN.matcher(ip);
@@ -88,7 +88,7 @@ public class LogParser {
     private String extractUrlFromLines(String line) {
         Matcher urlMatcher = LOG_ENTRY_PATTERN.matcher(line);
         if (!urlMatcher.find()) {
-            logger.warn("Skipping log line due to unmatched format: " + line);
+            logger.warn("Skipping log line due to unmatched format: " + line); // TODO what is the best practice here to handle situation like this? what are the things to consider?
             return null;
         }
 
@@ -101,8 +101,8 @@ public class LogParser {
         return url;
     }
 
-    private boolean isValidUrl(String url) {
-        if (url == null) return false;
+    boolean isValidUrl(String url) {
+        if (url == null) return false; // TODO check: reason for doing this is that it will return the null check earlier
         try {
             new URI(url);
             return true;

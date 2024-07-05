@@ -25,7 +25,7 @@ public class WebServerLogAnalyzer {
         this.logAnalyzer = logAnalyzer;
     }
 
-    public void run(String logFilePath) {
+    public void run(String logFilePath) { //TODO Test run Method?
         try {
             String startTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             logger.info("Starting the WebServerLogAnalyzer application at " + startTime + "...");
@@ -55,21 +55,25 @@ public class WebServerLogAnalyzer {
 
             // print result
             LogDetails logDetails = new LogDetails(ipCount.size(), top3VisitedUrls, top3ActiveIps);
-            System.out.println("\n");
-            System.out.println("Total Unique IP addresses: " + logDetails.uniqueIpAddresses() + "\n");
-
-            System.out.println("Top 3 Active IPs: ");
-            top3ActiveIps.forEach(System.out::println);
-
-            System.out.println("\n");
-            System.out.println("Top 3 Visited URLs: ");
-            top3VisitedUrls.forEach(System.out::println);
+            printResults(logDetails, top3ActiveIps, top3VisitedUrls);
 
             String endTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             logger.info("WebServerLogAnalyzer application completed successfully at " + endTime);
         } catch (IOException e) {
             logger.error("Application crashed: " + e.getMessage(), e);
         }
+    }
+
+    static void printResults(LogDetails logDetails, List<String> top3ActiveIps, List<String> top3VisitedUrls) {
+        System.out.println("\n");
+        System.out.println("Total Unique IP addresses: " + logDetails.uniqueIpAddresses() + "\n");
+
+        System.out.println("Top 3 Active IPs: ");
+        top3ActiveIps.forEach(System.out::println);
+
+        System.out.println("\n");
+        System.out.println("Top 3 Visited URLs: ");
+        top3VisitedUrls.forEach(System.out::println);
     }
 
     List<String> readLines(String logFilePath) throws IOException {

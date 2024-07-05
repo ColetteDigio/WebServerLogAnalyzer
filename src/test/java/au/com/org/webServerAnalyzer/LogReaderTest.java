@@ -1,6 +1,7 @@
 package au.com.org.webServerAnalyzer;
 
 import au.com.org.exception.LogFileEmptyException;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -11,7 +12,14 @@ import static org.junit.Assert.assertThrows;
 
 public class LogReaderTest {
 
-    LogReader logReader = new LogReader();
+
+    private LogReader logReader;
+
+    @Before
+    public void setUp() {
+        logReader = new LogReader();
+    }
+
 
     private String filePath = "src/test/resources/test_log_file.log";
     private String nonExistentLogFilePath = "I_dont_exists_log.txt";
