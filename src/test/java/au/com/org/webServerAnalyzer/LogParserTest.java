@@ -77,8 +77,11 @@ public class LogParserTest {
 
 //    @Test //TODO how to mock Logger?
 //    public void testExtractIpFromLinesWithInvalidIp() {
+//        Logger mockLogger = logger;
+//
 //        String logLine = "999.999.999.999 - - [10/Jul/2020:14:56:02 -0700] \"GET / HTTP/1.1\" 200 1234";
-//        String result = logParser.extractIpFromLines(logLine);
+////        String result = logParser.extractIpFromLines(logLine, mockLogger);
+//
 //
 //        assertNull(result);
 //        verify(logger).warn(logMessageCaptor.capture());

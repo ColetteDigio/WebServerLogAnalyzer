@@ -123,24 +123,39 @@
             <!-- Execute application to single JAR file -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
+                <artifactId>maven-jar-plugin</artifactId>
                 <version>3.3.0</version>
                 <configuration>
                     <archive>
                         <manifest>
+                            <addClasspath>true</addClasspath>
                             <mainClass>au.com.org.WebServerLogAnalyzerApp</mainClass>
+                            <classpathPrefix>META-INF</classpathPrefix>
                         </manifest>
                     </archive>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
                 </configuration>
                 <executions>
                     <execution>
                         <phase>package</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.7.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
                         <goals>
-                            <goal>single</goal>
+                            <goal>copy-dependencies</goal>
                         </goals>
+                        <configuration>
+                            <outputDirectory>
+                                ${project.build.directory}/META-INF
+                            </outputDirectory>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -221,11 +236,7 @@
                 </executions>
                 <configuration>
                     <excludes>
-                        <!-- LogDetails not included for unit testing in this project -->
                         <exclude>au/com/org/WebServerLogAnalyzerApp**</exclude>
-                        <exclude>au/com/org/mbean/LogAnalyzerMcBean**</exclude>
-                        <exclude>au/com/org/mbean/LogAnalyzerMonitor**</exclude>
-                        <exclude>au/com/org/mbean/MBeanRegistration**</exclude>
                     </excludes>
                 </configuration>
             </plugin>

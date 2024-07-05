@@ -30,24 +30,13 @@ public class WebServerLogAnalyzer {
             String startTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             logger.info("Starting the WebServerLogAnalyzer application at " + startTime + "...");
 
-            // Load configuration properties and process logs
-            Properties properties = configLoader.loadPropertiesFile("config.properties");
+            List<String> lines = readFile(logFilePath);
 
-            // Use the log file path from the command line if provided, otherwise use the path from properties
-            if (logFilePath == null) {
-                logFilePath = properties.getProperty("log.file.path");
-            }
-
-            // read lines from log file
-            List<String> lines = readLines(logFilePath);
-
-            // extract IPs and URLs
-            List<String> ipAddresses = logParser.extractIpAddresses(lines);
-            List<String> urls = logParser.extractUrls(lines);
+            Result result = getResult(lines);
 
             // count occurrences of IPs and URLs
-            Map<String, Integer> ipCount = logAnalyzer.countOccurrences(ipAddresses);
-            Map<String, Integer> urlCount = logAnalyzer.countOccurrences(urls);
+            Map<String, Integer> ipCount = logAnalyzer.countOccurrences(result.ipAddresses());
+            Map<String, Integer> urlCount = logAnalyzer.countOccurrences(result.urls());
 
             // get top 3 Ips and Urls
             List<String> top3ActiveIps = logAnalyzer.getTop3(ipCount, 3);
@@ -62,6 +51,31 @@ public class WebServerLogAnalyzer {
         } catch (IOException e) {
             logger.error("Application crashed: " + e.getMessage(), e);
         }
+    }
+
+    private Result getResult(List<String> lines) {
+        // extract IPs and URLs
+        List<String> ipAddresses = logParser.extractIpAddresses(lines);
+        List<String> urls = logParser.extractUrls(lines);
+        Result result = new Result(ipAddresses, urls);
+        return result;
+    }
+
+    private record Result(List<String> ipAddresses, List<String> urls) {
+    }
+
+    private List<String> readFile(String logFilePath) throws IOException {
+        // Load configuration properties and process logs
+        Properties properties = configLoader.loadPropertiesFile("config.properties");
+
+        // Use the log file path from the command line if provided, otherwise use the path from properties
+        if (logFilePath == null) {
+            logFilePath = properties.getProperty("log.file.path");
+        }
+
+        // read lines from log file
+        List<String> lines = readLines(logFilePath);
+        return lines;
     }
 
     static void printResults(LogDetails logDetails, List<String> top3ActiveIps, List<String> top3VisitedUrls) {

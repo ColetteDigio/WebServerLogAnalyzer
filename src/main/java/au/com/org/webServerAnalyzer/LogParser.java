@@ -89,7 +89,7 @@ public class LogParser {
         Matcher urlMatcher = LOG_ENTRY_PATTERN.matcher(line);
         if (!urlMatcher.find()) {
             logger.warn("Skipping log line due to unmatched format: " + line); // TODO what is the best practice here to handle situation like this? what are the things to consider?
-            return null;
+            return null; // TODO maybe want to output to some format to print the "lines that can't be parsed"
         }
 
         String url = urlMatcher.group(2);
@@ -102,13 +102,13 @@ public class LogParser {
     }
 
     boolean isValidUrl(String url) {
-        if (url == null) return false; // TODO check: reason for doing this is that it will return the null check earlier
+        if (url == null) return false;
         try {
             new URI(url);
             return true;
-        } catch (URISyntaxException e) {
+        } catch (RuntimeException | URISyntaxException e) {
+            logger.warn("General error occurred: " + e.getMessage());
             return false;
         }
     }
-
 }
