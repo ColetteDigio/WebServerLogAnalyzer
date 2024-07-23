@@ -13,11 +13,9 @@ import java.util.regex.Pattern;
 public class LogParser {
     private static final Logger logger = Logger.getLogger(LogParser.class);
 
-    // Regular expression to validate IPv4 addresses
     private static final Pattern IP_PATTERN = Pattern.compile(
             "\\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b");
 
-    // Regular expression to match log lines with optional extra information
     private static final Pattern LOG_ENTRY_PATTERN = Pattern.compile(
             "^(\\S+)\\s+-\\s+\\S+\\s+\\[.*?\\]\\s+\"\\S+\\s+(\\S+)\\s+HTTP/\\S+\"\\s+\\d+\\s+\\d+.*$");
 
@@ -34,8 +32,6 @@ public class LogParser {
 
             return ipAddresses;
         }
-
-
 
     public List<String> extractUrls(List<String> lines) {
         List<String> urls = new ArrayList<>();
@@ -84,7 +80,6 @@ public class LogParser {
         return true;
     }
 
-
     private String extractUrlFromLines(String line) {
         Matcher urlMatcher = LOG_ENTRY_PATTERN.matcher(line);
         if (!urlMatcher.find()) {
@@ -112,3 +107,4 @@ public class LogParser {
         }
     }
 }
+

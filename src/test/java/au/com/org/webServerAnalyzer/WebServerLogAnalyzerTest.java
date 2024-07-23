@@ -28,13 +28,11 @@ public class WebServerLogAnalyzerTest {
 
     @Before
     public void setUp() throws IOException {
-        // Hardcoded log file lines
         logLines = Arrays.asList(
                 "192.168.0.1 - - [10/Jul/2020:14:56:02 -0700] \"GET / HTTP/1.1\" 200 1234",
                 "192.168.0.2 - - [10/Jul/2020:14:56:03 -0700] \"GET /about HTTP/1.1\" 200 1234"
         );
 
-        // Mock log file lines
         when(logReader.readLines("test_log_path")).thenReturn(logLines);
     }
 
@@ -42,28 +40,22 @@ public class WebServerLogAnalyzerTest {
     public void testReadLines() throws IOException {
         List<String> result = webServerLogAnalyzer.readLines("test_log_path");
 
-        // Verify log reading
         verify(logReader).readLines("test_log_path");
 
-        // Assert the result
         assertEquals(logLines, result);
     }
 
     @Test
     public void testPrintResults() {
-        // Hardcoded IPs and URLs data
         List<String> top3ActiveIps = Arrays.asList("192.168.0.1 - 1 requests", "192.168.0.2 - 1 requests");
         List<String> top3VisitedUrls = Arrays.asList("/ - 1 requests", "/about - 1 requests");
         LogDetails logDetails = new LogDetails(2, top3VisitedUrls, top3ActiveIps);
 
-        // Redirect System.out to a ByteArrayOutputStream to capture the print output
         java.io.ByteArrayOutputStream outContent = new java.io.ByteArrayOutputStream();
         System.setOut(new java.io.PrintStream(outContent));
 
-        // Invoke the printResults method
         WebServerLogAnalyzer.printResults(logDetails, top3ActiveIps, top3VisitedUrls);
 
-        // Assert the output
         String expectedOutput = "\n" + "\n" +
                 "Total Unique IP addresses: 2\n" +
                 "\n" +
@@ -78,7 +70,6 @@ public class WebServerLogAnalyzerTest {
 
         assertEquals(expectedOutput, outContent.toString());
 
-        // Reset System.out
         System.setOut(null);
     }
 

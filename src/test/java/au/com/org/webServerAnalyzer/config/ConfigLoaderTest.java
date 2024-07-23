@@ -14,7 +14,7 @@ import static org.junit.Assert.assertThrows;
 public class ConfigLoaderTest {
 
     @Test
-    public void testLoadPropertiesFileValid() throws IOException {
+    public void test_LoadPropertiesFile_IsValid() throws IOException {
         Properties properties = ConfigLoader.loadPropertiesFile("valid-config.properties");
         assertNotNull(properties);
         assertEquals("value1", properties.getProperty("key1"));
@@ -22,10 +22,11 @@ public class ConfigLoaderTest {
     }
 
     @Test
-    public void testLoadPropertiesFileNotFound() {
+    public void test_LoadPropertiesFile_NotFound() {
         Exception exception = assertThrows(FileNotFoundException.class, () -> {
             ConfigLoader.loadPropertiesFile("non_existent_config.properties");
         });
         assertEquals("Config file non_existent_config.properties not found", exception.getMessage());
     }
 }
+

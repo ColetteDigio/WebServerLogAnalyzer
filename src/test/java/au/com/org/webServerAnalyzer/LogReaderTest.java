@@ -12,7 +12,6 @@ import static org.junit.Assert.assertThrows;
 
 public class LogReaderTest {
 
-
     private LogReader logReader;
 
     @Before
@@ -20,30 +19,27 @@ public class LogReaderTest {
         logReader = new LogReader();
     }
 
-
-    private String filePath = "src/test/resources/test_log_file.log";
-    private String nonExistentLogFilePath = "I_dont_exists_log.txt";
-    private String emptyFilePath = "src/test/resources/empty.log";
+    private final String nonExistentLogFilePath = "I_dont_exists_log.txt";
+    private final String emptyFilePath = "src/test/resources/empty.log";
 
     @Test
-    public void testReadLogsFromFile() throws IOException {
+    public void test_ReadLines() throws IOException {
+        String filePath = "src/test/resources/test_log_file.log";
         List<String> logs = logReader.readLines(filePath);
         assertEquals(5, logs.size());
     }
 
     @Test
-    public void testLogFileNotFound() {
+    public void test_LogFile_NotFound() {
         assertThrows(IOException.class, () -> {
             logReader.readLines(nonExistentLogFilePath);
         });
     }
 
     @Test
-    public void testLogFileIsEmpty() {
+    public void test_LogFile_IsEmpty() {
         assertThrows(LogFileEmptyException.class, () -> {
             logReader.readLines(emptyFilePath);
         });
     }
-
-
 }

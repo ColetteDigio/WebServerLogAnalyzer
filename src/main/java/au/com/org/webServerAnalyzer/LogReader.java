@@ -25,8 +25,6 @@ public class LogReader {
                 fullLogs.add(line);
             }
 
-
-            // Check if the log file is empty
             if (isEmptyFile(fullLogs)) {
                 logger.info("No logs available for analysis.");
                 throw new LogFileEmptyException("No logs available for analysis.");
@@ -43,6 +41,7 @@ public class LogReader {
         return logs.isEmpty();
     }
 }
+
 
 
 

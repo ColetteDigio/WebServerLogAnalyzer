@@ -5,3 +5,4 @@ public class LogFileEmptyException extends RuntimeException{
         super(message);
     }
 }
+

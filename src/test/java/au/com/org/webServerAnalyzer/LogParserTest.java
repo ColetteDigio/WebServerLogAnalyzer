@@ -1,13 +1,9 @@
 package au.com.org.webServerAnalyzer;
 
-import org.apache.logging.log4j.core.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
@@ -23,12 +19,6 @@ public class LogParserTest {
 
     @InjectMocks
     private LogParser logParser;
-
-    @Mock
-    private Logger logger;
-
-    @Captor
-    private ArgumentCaptor<String> logMessageCaptor;
 
     @Before
     public void setUp() {
@@ -49,7 +39,7 @@ public class LogParserTest {
             "168.41.191.43 - - [11/Jul/2018:17:43:40 +0200] \"GET /moved-permanently HTTP/1.1\" 301 3574 \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_7) AppleWebKit/534.24 (KHTML, like Gecko) RockMelt/0.9.58.494 Chrome/11.0.696.71 Safari/534.24");
 
     @Test
-    public void testParseIpAddresses() {
+    public void test_ParseIpAddresses() {
 
         List<String> ipAddresses = logParser.extractIpAddresses(lines);
 
@@ -61,7 +51,7 @@ public class LogParserTest {
     }
 
     @Test
-    public void testExtractIpAddressesWithInvalidAndValidIps() {
+    public void test_ExtractIpAddresses_With_Invalid_And_ValidIps() {
         List<String> logs = Arrays.asList(
                 "50.112.00.11 - admin [11/Jul/2018:17:31:56 +0200] \"GET /asset.js HTTP/1.1\" 200 3574 \"-\" \"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.6 (KHTML, like Gecko) Chrome/20.0.1092.0 Safari/536.6\"",
                 "invalid-ip - admin [11/Jul/2018:17:31:56 +0200] \"GET /asset.js HTTP/1.1\" 200 3574 \"-\" \"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.6 (KHTML, like Gecko) Chrome/20.0.1092.0 Safari/536.6\"",
@@ -75,22 +65,8 @@ public class LogParserTest {
         assertTrue(ipAddresses.contains("168.41.191.9"));
     }
 
-//    @Test //TODO how to mock Logger?
-//    public void testExtractIpFromLinesWithInvalidIp() {
-//        Logger mockLogger = logger;
-//
-//        String logLine = "999.999.999.999 - - [10/Jul/2020:14:56:02 -0700] \"GET / HTTP/1.1\" 200 1234";
-////        String result = logParser.extractIpFromLines(logLine, mockLogger);
-//
-//
-//        assertNull(result);
-//        verify(logger).warn(logMessageCaptor.capture());
-//        assertEquals("Skipping log line due to invalid IP address: " + logLine, logMessageCaptor.getValue());
-//    }
-
-
     @Test
-    public void testExtractUrls() {
+    public void test_ExtractUrls() {
         List<String> urls = logParser.extractUrls(lines);
 
         assertEquals(10, urls.size());
@@ -101,7 +77,7 @@ public class LogParserTest {
     }
 
     @Test
-    public void testExtractUrlsWithVariedHttpMethods() {
+    public void test_ExtractUrls_With_Varies_HttpMethods() {
         List<String> logs = List.of(
                 "72.44.32.11 - - [11/Jul/2018:17:42:07 +0200] \"POST /to-an-error HTTP/1.1\" 500 3574 \"-\" \"Mozilla/5.0 (compatible; MSIE 10.6; Windows NT 6.1; Trident/5.0; InfoPath.2; SLCC1; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET CLR 2.0.50727) 3gpp-gba UNTRUSTED/1.0\"",
                 "72.44.32.10 - - [09/Jul/2018:15:48:07 +0200] \"PUT /how-to HTTP/1.1\" 200 3574 \"-\" \"Mozilla/5.0 (compatible; MSIE 10.6; Windows NT 6.1; Trident/5.0; InfoPath.2; SLCC1; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET CLR 2.0.50727) 3gpp-gba UNTRUSTED/1.0\" junk extra",
@@ -119,14 +95,14 @@ public class LogParserTest {
     }
 
     @Test
-    public void testValidIp() {
+    public void test_ValidIp() {
         assertTrue(logParser.isValidIp("192.168.0.1"));
         assertTrue(logParser.isValidIp("0.0.0.0"));
         assertTrue(logParser.isValidIp("255.255.255.255"));
     }
 
     @Test
-    public void testInvalidIp() {
+    public void test_InvalidIp() {
         assertFalse(logParser.isValidIp("256.256.256.256")); // each part exceeds 255
         assertFalse(logParser.isValidIp("192.168.0"));       // incomplete IP
         assertFalse(logParser.isValidIp("192.168.0.1.1"));   // too many parts
@@ -138,7 +114,7 @@ public class LogParserTest {
     }
 
     @Test
-    public void testValidUrl() {
+    public void test_ValidUrl() {
         assertTrue(logParser.isValidUrl("http://example.com"));
         assertTrue(logParser.isValidUrl("https://example.com"));
         assertTrue(logParser.isValidUrl("ftp://example.com"));
@@ -146,12 +122,11 @@ public class LogParserTest {
     }
 
     @Test
-    public void testInvalidUrl() {
+    public void test_InvalidUrl() {
         assertFalse(logParser.isValidUrl("http://"));            // no domain
         assertFalse(logParser.isValidUrl("://example.com"));     // no protocol
         assertFalse(logParser.isValidUrl("http:// example.com"));// space in URL
         assertFalse(logParser.isValidUrl(" "));                  // empty string
         assertFalse(logParser.isValidUrl(null));                 // null
     }
-
 }
